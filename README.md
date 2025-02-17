@@ -1,5 +1,3 @@
-# Text-To-Eat
-
 # Text_To_Eat
 
 ## Overview
