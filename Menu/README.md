@@ -65,4 +65,4 @@ python menu.py
 
 ## References
 [https://www.geeksforgeeks.org/flask-creating-first-simple-application/](https://www.geeksforgeeks.org/flask-creating-first-simple-application/)  <br>
-[https://flask.palletsprojects.com/en/stable/quickstart/] (https://flask.palletsprojects.com/en/stable/quickstart/)
+[https://flask.palletsprojects.com/en/stable/quickstart/](https://flask.palletsprojects.com/en/stable/quickstart/)
