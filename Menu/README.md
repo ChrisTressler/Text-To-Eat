@@ -15,7 +15,7 @@ Manages a collection of `MenuItem` objects. Provides methods for loading menu da
 
 This file sets up the Flask application and defines the API routes to interact with the menu.
 
-**Route**: `/menu/<item_id>` to get details of a specific item by ID.
+**Route**: `/menu/<item_id>` to get details of a specific item by ID. <br>
 **Route**: `/menu` to return all menu items or filter by category.
 
 The Flask app is configured to load menu data on startup and respond to requests accordingly.
