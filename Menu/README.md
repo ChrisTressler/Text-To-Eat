@@ -24,10 +24,10 @@ The Flask app is configured to load menu data on startup and respond to requests
 
 This file includes unit tests designed to ensure the correct behavior of the menu API.
 
-- **Tests**:
-  - `test_get_menu`: Ensures the `/menu` route retrieves the entire menu and includes specific items.
-  - `test_get_item`: Verifies that the `/menu/<item_id>` route returns the correct menu item.
-  - `test_item_not_found`: Tests the case when a non-existent item is requested, expecting a 404 error.
+**Tests**:
+`test_get_menu`: Ensures the `/menu` route retrieves the entire menu and includes specific items.
+`test_get_item`: Verifies that the `/menu/<item_id>` route returns the correct menu item.
+`test_item_not_found`: Tests the case when a non-existent item is requested, expecting a 404 error.
 
 ### **4. `menu_data.json`**: Sample Menu Data (JSON format)
 
