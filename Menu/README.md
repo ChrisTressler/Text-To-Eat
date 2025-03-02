@@ -7,7 +7,7 @@
 This file contains the logic and classes that handle managing the menu items.
 
 **`MenuItem` class**: 
-Represents a single menu item, including attributes such as `name`, `id`, `price`, `ingredients`, `combo`, `size`, `category`, and `description`.
+Represents a single menu item, including attributes such as `name`, `id`, `price`, `ingredients`, `combo`, `size`, `category`, and `description`.  <br>
 **`Menu` class**: 
 Manages a collection of `MenuItem` objects. Provides methods for loading menu data, retrieving items by ID, and filtering by category.
 
