@@ -51,7 +51,7 @@ Example:
 
 ## Dependencies
 
-pip install flask
+pip install flask <br>
 python -m pip install --upgrade pip
 
 ### Run the Flask API:
