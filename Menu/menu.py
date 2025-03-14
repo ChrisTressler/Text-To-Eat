@@ -7,15 +7,15 @@ str_list = List[str]
 # Class representing a menu item
 class MenuItem:
     def __init__(self, name: str, id: str, price: float, ingredients: str_list,
-                 combo: bool, size: str, category: str, description: str):
+                 size: str, category: str, description: str, notes: str = ""):
         self.name = name                # Assigning the name of the menu item
         self.id = id                    # Assigning the unique identifier for the menu item
         self.price = price              # Assigning the price of the menu item
         self.ingredients = ingredients  # Listing underlying ingredients
-        self.combo = combo              # Boolean flag indicating if the menu item is part of a combo
         self.size = size                # The size of the menu item
         self.category = category        # Category to which the item belongs
         self.description = description  # A textual description of the menu item
+        self.notes = notes
 
     # Returning a string representation of a MenuItem
     def __str__(self):
@@ -40,10 +40,10 @@ class Menu:
                 id=item['id'],
                 price=item['price'],
                 ingredients=item['ingredients'],
-                combo=item['combo'],
                 size=item['size'],
                 category=item['category'],
-                description=item['description']
+                description=item['description'],
+                notes=item['notes']
             )
             # Adding the MenuItem to the items dictionary, using its ID as the key
             self.items[item['id']] = menu_item

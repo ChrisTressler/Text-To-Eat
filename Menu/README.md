@@ -31,7 +31,7 @@ This file includes unit tests designed to ensure the correct behavior of the men
 
 ### **4. `menu_data.json`**: Sample Menu Data (JSON format)
 
-This file contains sample data for menu items (inspired by McDonald's menu) in JSON format. The data includes essential attributes for each menu item, such as `name`, `id`, `price`, `ingredients`, `combo`, `size`, `category`, and `description`.
+This file contains sample data for menu items (inspired by McDonald's menu) in JSON format. The data includes essential attributes for each menu item, such as `name`, `id`, `price`, `ingredients`, `size`, `category`, and `description`.
 
 Example:
 {
@@ -41,7 +41,6 @@ Example:
       "id": "BURG001",
       "price": 5.99,
       "ingredients": ["BUN001", "MEAT001", "CHEESE001"],
-      "combo": true,
       "size": "medium",
       "category": "burgers",
       "description": "A delicious burger with two all-beef patties."

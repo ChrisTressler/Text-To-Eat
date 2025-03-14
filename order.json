@@ -1,0 +1,38 @@
+{
+    "menuItems": [
+        {
+            "name": "Quarter Pounder with Cheese",
+            "id": "QPND",
+            "price": 6.49,
+            "ingredients": [
+                "MUST",
+                "PICK",
+                "CHED"
+            ],
+            "size": "none",
+            "category": "burgers",
+            "description": "Quarter-pound beef patty topped with cheese, pickles, onions, ketchup, and mustard.",
+            "notes": ""
+        },
+        {
+            "name": "French Fries",
+            "id": "LFRY",
+            "price": 3.39,
+            "ingredients": [],
+            "size": "none",
+            "category": "sides",
+            "description": "Crispy golden fries made from premium potatoes.",
+            "notes": ""
+        },
+        {
+            "name": "Sprite",
+            "id": "MSPR",
+            "price": 1.99,
+            "ingredients": [],
+            "size": "medium",
+            "category": "drinks",
+            "description": "Lemon-lime soda with a crisp taste.",
+            "notes": ""
+        }
+    ]
+}

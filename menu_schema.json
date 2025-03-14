@@ -1,0 +1,53 @@
+{
+  "format": {
+    "type": "json_schema",
+    "name": "menu_data",
+    "schema": {
+      "type": "object",
+      "required": ["menuItems"],
+      "properties": {
+        "menuItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "id", "price", "ingredients", "size", "category", "description", "notes"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "ingredients": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "size": {
+                "type": "string",
+                "enum": ["none", "regular", "medium", "single"]
+              },
+              "category": {
+                "type": "string",
+                "enum": ["burgers", "sides", "condiments", "drinks", "desserts", "breakfast", "toppings"]
+              },
+              "description": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "strict": true
+  }
+}
