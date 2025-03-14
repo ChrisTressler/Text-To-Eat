@@ -10,12 +10,11 @@ str_list = List[str]
 # Class representing a menu item
 class MenuItem:
     def __init__(self, name: str, id: str, price: float, ingredients: str_list,
-                 combo: bool, size: str, category: str, description: str):
+                 size: str, category: str, description: str):
         self.name = name                # Assigning the name of the menu item
         self.id = id                    # Assigning the unique identifier for the menu item
         self.price = price              # Assigning the price of the menu item
         self.ingredients = ingredients  # Listing underlying ingredients
-        self.combo = combo              # Boolean flag indicating if the menu item is part of a combo
         self.size = size                # The size of the menu item
         self.category = category        # Category to which the item belongs
         self.description = description  # A textual description of the menu item
@@ -43,7 +42,6 @@ class Menu:
                 id=item['id'],
                 price=item['price'],
                 ingredients=item['ingredients'],
-                combo=item['combo'],
                 size=item['size'],
                 category=item['category'],
                 description=item['description']
@@ -84,8 +82,7 @@ def get_item(item_id: str):
             "name": item.name,
             "id": item.id,
             "price": item.price,
-            "ingredients": [ingredient.name for ingredient in item.ingredients],  # List of ingredient names
-            "combo": item.combo,
+            "ingredients": [ingredient.name for ingredient in item.ingredients],
             "size": item.size,
             "category": item.category,
             "description": item.description
@@ -94,11 +91,24 @@ def get_item(item_id: str):
         # If item not found, returning a 404 error with a message
         return jsonify({"error": "Item not found"}), 404
 
-# Flask route to load data before the first request is processed
-@app.before_first_request
-def load_data():
-    # Loading the menu data when the app starts or before any request
-    menu.load_menu("menu_data.json")
+# Add this new route to handle /menu requests
+@app.route("/menu", methods=["GET"])
+def get_menu():
+    # Get all items from the menu
+    items = menu.get_items()
+    
+    # Convert the items to a JSON-friendly format
+    menu_items = [{
+        "name": item.name,
+        "id": item.id,
+        "price": item.price,
+        "ingredients": [ingredient.name for ingredient in item.ingredients],
+        "size": item.size,
+        "category": item.category,
+        "description": item.description
+    } for item in items]
+    
+    return jsonify({"menu_items": menu_items})
 
 # Running the Flask app in debug mode
 if __name__ == "__main__":

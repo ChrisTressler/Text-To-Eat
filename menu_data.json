@@ -1,0 +1,346 @@
+{
+  "menuItems": [
+    {
+      "name": "Big Mac",
+      "id": "BMAC",
+      "price": 5.99,
+      "ingredients": ["BSAU", "LETT", "PICK", "ONIO"],
+      "size": "none",
+      "category": "burgers",
+      "description": "Two all-beef patties, special sauce, lettuce, cheese, pickles, onions on a sesame seed bun."
+    },
+    {
+      "name": "McChicken",
+      "id": "MCCK",
+      "price": 4.99,
+      "ingredients": ["MAYO", "LETT", "ONIO"],
+      "size": "none",
+      "category": "burgers",
+      "description": "Crispy chicken patty topped with lettuce and mayo on a toasted bun."
+    },
+    {
+      "name": "Quarter Pounder with Cheese",
+      "id": "QPND",
+      "price": 6.49,
+      "ingredients": ["MUST", "PICK", "CHED"],
+      "size": "none",
+      "category": "burgers",
+      "description": "Quarter-pound beef patty topped with cheese, pickles, onions, ketchup, and mustard."
+    },
+    {
+      "name": "French Fries",
+      "id": "SFRY",
+      "price": 2.29,
+      "ingredients": [],
+      "size": "small",
+      "category": "sides",
+      "description": "Crispy golden fries made from premium potatoes."
+    },
+    {
+      "name": "French Fries",
+      "id": "MFRY",
+      "price": 2.99,
+      "ingredients": [],
+      "size": "medium",
+      "category": "sides",
+      "description": "Crispy golden fries made from premium potatoes."
+    },
+    {
+      "name": "French Fries",
+      "id": "LFRY",
+      "price": 3.39,
+      "ingredients": [],
+      "size": "large",
+      "category": "sides",
+      "description": "Crispy golden fries made from premium potatoes."
+    },
+    {
+      "name": "Apple Slices",
+      "id": "APPL",
+      "price": 1.49,
+      "ingredients": [],
+      "size": "none",
+      "category": "sides",
+      "description": "Juicy apple slices."
+    },
+    {
+      "name": "McNuggets (4 pcs)",
+      "id": "SNUG",
+      "price": 2.99,
+      "ingredients": [],
+      "size": "none",
+      "category": "nuggets",
+      "description": "Four crispy chicken nuggets, perfect for dipping."
+    },
+    {
+      "name": "McNuggets (6 pcs)",
+      "id": "MNUG",
+      "price": 4.49,
+      "ingredients": [],
+      "size": "none",
+      "category": "nuggets",
+      "description": "Six crispy chicken nuggets, perfect for dipping."
+    },
+    {
+      "name": "McNuggets (10 pcs)",
+      "id": "LNUG",
+      "price": 6.49,
+      "ingredients": [],
+      "size": "none",
+      "category": "nuggets",
+      "description": "Ten crispy chicken nuggets, perfect for dipping."
+    },
+    {
+      "name": "Ketchup",
+      "id": "KTCH",
+      "price": 0.25,
+      "ingredients": [],
+      "size": "none",
+      "category": "condiments",
+      "description": "Tomato-based condiment with a sweet and tangy flavor."
+    },
+    {
+      "name": "Mayonnaise",
+      "id": "MAYO",
+      "price": 0.25,
+      "ingredients": [],
+      "size": "none",
+      "category": "condiments",
+      "description": "A rich and creamy classic spread made with eggs and oil."
+    },
+    {
+      "name": "Big Mac Sauce",
+      "id": "BSAU",
+      "price": 0.25,
+      "ingredients": [],
+      "size": "none",
+      "category": "condiments",
+      "description": "Tangy and creamy sauce that makes the Big Mac legendary."
+    },
+    {
+      "name": "Mustard",
+      "id": "MUST",
+      "price": 0.25,
+      "ingredients": [],
+      "size": "none",
+      "category": "condiments",
+      "description": "Classic yellow mustard with a tangy kick."
+    },
+    {
+      "name": "BBQ Sauce",
+      "id": "BBQS",
+      "price": 0.25,
+      "ingredients": [],
+      "size": "none",
+      "category": "condiments",
+      "description": "Smoky and sweet barbecue sauce."
+    },
+    {
+      "name": "Coca-Cola",
+      "id": "SCOK",
+      "price": 1.49,
+      "ingredients": [],
+      "size": "small",
+      "category": "drinks",
+      "description": "Refreshing, ice-cold Coca-Cola."
+    },
+    {
+      "name": "Coca-Cola",
+      "id": "MCOK",
+      "price": 1.99,
+      "ingredients": [],
+      "size": "medium",
+      "category": "drinks",
+      "description": "Refreshing, ice-cold Coca-Cola."
+    },
+    {
+      "name": "Coca-Cola",
+      "id": "LCOK",
+      "price": 2.49,
+      "ingredients": [],
+      "size": "large",
+      "category": "drinks",
+      "description": "Refreshing, ice-cold Coca-Cola."
+    },
+    {
+      "name": "Sprite",
+      "id": "SSPR",
+      "price": 1.49,
+      "ingredients": [],
+      "size": "small",
+      "category": "drinks",
+      "description": "Lemon-lime soda with a crisp taste."
+    },
+    {
+      "name": "Sprite",
+      "id": "MSPR",
+      "price": 1.99,
+      "ingredients": [],
+      "size": "medium",
+      "category": "drinks",
+      "description": "Lemon-lime soda with a crisp taste."
+    },
+    {
+      "name": "Sprite",
+      "id": "LSPR",
+      "price": 2.49,
+      "ingredients": [],
+      "size": "small",
+      "category": "drinks",
+      "description": "Lemon-lime soda with a crisp taste."
+    },
+    {
+      "name": "Vanilla Milkshake",
+      "id": "SVMS",
+      "price": 3.29,
+      "ingredients": [],
+      "size": "small",
+      "category": "drinks",
+      "description": "Creamy vanilla milkshake topped with whipped cream."
+    },
+    {
+      "name": "Vanilla Milkshake",
+      "id": "MVMS",
+      "price": 3.99,
+      "ingredients": [],
+      "size": "medium",
+      "category": "drinks",
+      "description": "Creamy vanilla milkshake topped with whipped cream."
+    },
+    {
+      "name": "Vanilla Milkshake",
+      "id": "LVMS",
+      "price": 4.49,
+      "ingredients": [],
+      "size": "large",
+      "category": "drinks",
+      "description": "Creamy vanilla milkshake topped with whipped cream."
+    },
+    {
+      "name": "Apple Pie",
+      "id": "APIE",
+      "price": 2.49,
+      "ingredients": [],
+      "size": "none",
+      "category": "desserts",
+      "description": "Warm apple filling wrapped in a flaky, golden-brown crust."
+    },
+    {
+      "name": "McFlurry with Oreo",
+      "id": "SORE",
+      "price": 3.29,
+      "ingredients": [],
+      "size": "small",
+      "category": "desserts",
+      "description": "Soft serve ice cream blended with Oreo cookie pieces."
+    },
+    {
+      "name": "McFlurry with Oreo",
+      "id": "MORE",
+      "price": 3.99,
+      "ingredients": [],
+      "size": "medium",
+      "category": "desserts",
+      "description": "Soft serve ice cream blended with Oreo cookie pieces."
+    },
+    {
+      "name": "McFlurry with Oreo",
+      "id": "LORE",
+      "price": 4.49,
+      "ingredients": [],
+      "size": "large",
+      "category": "desserts",
+      "description": "Soft serve ice cream blended with Oreo cookie pieces."
+    },
+    {
+      "name": "Egg McMuffin",
+      "id": "EMUF",
+      "price": 3.99,
+      "ingredients": ["EGGS", "CABA"],
+      "size": "none",
+      "category": "breakfast",
+      "description": "Freshly cracked egg, Canadian bacon, and melted cheese on a toasted English muffin."
+    },
+    {
+      "name": "Hash Browns",
+      "id": "HASH",
+      "price": 2.49,
+      "ingredients": [],
+      "size": "none",
+      "category": "breakfast",
+      "description": "Crispy, golden-brown hash browns."
+    },
+    {
+      "name": "Hotcakes",
+      "id": "HCAK",
+      "price": 4.99,
+      "ingredients": ["MSYR"],
+      "size": "none",
+      "category": "breakfast",
+      "description": "Fluffy hotcakes served with syrup."
+    },
+    {
+      "name": "Maple Syrup",
+      "id": "MSYR",
+      "price": 0.25,
+      "ingredients": [],
+      "size": "none",
+      "category": "condiments",
+      "description": "Sweet maple syrup for pancakes and hotcakes."
+    },
+    {
+      "name": "Lettuce",
+      "id": "LETT",
+      "price": 0.00,
+      "ingredients": [],
+      "size": "none",
+      "category": "toppings",
+      "description": "Freshly shredded lettuce."
+    },
+    {
+      "name": "Pickles",
+      "id": "PICK",
+      "price": 0.00,
+      "ingredients": [],
+      "size": "none",
+      "category": "toppings",
+      "description": "Tangy and crunchy pickles."
+    },
+    {
+      "name": "Onions",
+      "id": "ONIO",
+      "price": 0.00,
+      "ingredients": [],
+      "size": "none",
+      "category": "toppings",
+      "description": "Diced onions for extra flavor."
+    },
+    {
+      "name": "Cheddar Cheese",
+      "id": "CHED",
+      "price": 0.50,
+      "ingredients": [],
+      "size": "none",
+      "category": "toppings",
+      "description": "Melted cheddar cheese."
+    },
+    {
+      "name": "Egg",
+      "id": "EGGS",
+      "price": 0.50,
+      "ingredients": [],
+      "size": "none",
+      "category": "toppings",
+      "description": "Freshly cracked egg."
+    },
+    {
+      "name": "Canadian Bacon",
+      "id": "CABA",
+      "price": 1.00,
+      "ingredients": [],
+      "size": "none",
+      "category": "toppings",
+      "description": "Savory, thinly sliced Canadian bacon."
+    }
+  ]
+}
