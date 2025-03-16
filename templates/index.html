@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-To-Eat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="start-page">
+    <div class="start-container">
+        <div class="start-prompt">
+            <h1>TAP TO BEGIN</h1>
+        </div>
+    </div>
+
+    <script>
+        // Add event listener to the entire page
+        document.addEventListener('click', function() {
+            window.location.href = "{{ url_for('menu_page') }}";
+        });
+        
+        // Also listen for touch events for touch screens
+        document.addEventListener('touchstart', function() {
+            window.location.href = "{{ url_for('menu_page') }}";
+        });
+    </script>
+</body>
+</html>
