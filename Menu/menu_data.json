@@ -4,35 +4,215 @@
       "name": "Big Mac",
       "id": "BURG001",
       "price": 5.99,
-      "ingredients": ["SAUCE004", "TOPPING001", "TOPPING002", "TOPPING003"],
+      "ingredients": ["SAUCE004", "TOPPING001", "TOPPING002", "TOPPING003", "TOPPING004", "PATTY001"],
       "combo": true,
       "size": "regular",
       "category": "burgers",
       "description": "Two all-beef patties, special sauce, lettuce, cheese, pickles, onions on a sesame seed bun."
     },
     {
-      "name": "McChicken",
-      "id": "BURG002",
-      "price": 4.99,
-      "ingredients": ["SAUCE002", "TOPPING001", "TOPPING003"],
-      "combo": true,
-      "size": "regular",
-      "category": "burgers",
-      "description": "Crispy chicken patty topped with lettuce and mayo on a toasted bun."
-    },
-    {
       "name": "Quarter Pounder with Cheese",
-      "id": "BURG003",
+      "id": "BURG002",
       "price": 6.49,
-      "ingredients": ["SAUCE005", "TOPPING002", "TOPPING004"],
+      "ingredients": ["SAUCE001", "SAUCE005", "TOPPING002", "TOPPING003", "TOPPING004", "PATTY002"],
       "combo": true,
       "size": "regular",
       "category": "burgers",
       "description": "Quarter-pound beef patty topped with cheese, pickles, onions, ketchup, and mustard."
     },
     {
-      "name": "French Fries",
+      "name": "Double Quarter Pounder with Cheese",
+      "id": "BURG003",
+      "price": 7.99,
+      "ingredients": ["SAUCE001", "SAUCE005", "TOPPING002", "TOPPING003", "TOPPING004", "PATTY002", "PATTY002"],
+      "combo": true,
+      "size": "regular",
+      "category": "burgers",
+      "description": "Two quarter-pound beef patties topped with cheese, pickles, onions, ketchup, and mustard."
+    },
+    {
+      "name": "Cheeseburger",
+      "id": "BURG004",
+      "price": 2.99,
+      "ingredients": ["SAUCE001", "SAUCE005", "TOPPING002", "TOPPING003", "TOPPING004", "PATTY003"],
+      "combo": true,
+      "size": "regular",
+      "category": "burgers",
+      "description": "Beef patty topped with cheese, pickles, onions, ketchup, and mustard."
+    },
+    {
+      "name": "Double Cheeseburger",
+      "id": "BURG005",
+      "price": 3.99,
+      "ingredients": ["SAUCE001", "SAUCE005", "TOPPING002", "TOPPING003", "TOPPING004", "PATTY003", "PATTY003"],
+      "combo": true,
+      "size": "regular",
+      "category": "burgers",
+      "description": "Two beef patties topped with cheese, pickles, onions, ketchup, and mustard."
+    },
+    {
+      "name": "Hamburger",
+      "id": "BURG006",
+      "price": 1.99,
+      "ingredients": ["SAUCE001", "SAUCE005", "TOPPING002", "TOPPING003", "PATTY003"],
+      "combo": true,
+      "size": "regular",
+      "category": "burgers",
+      "description": "Beef patty topped with pickles, onions, ketchup, and mustard."
+    },
+    {
+      "name": "McDouble",
+      "id": "BURG007",
+      "price": 3.49,
+      "ingredients": ["SAUCE001", "SAUCE005", "TOPPING002", "TOPPING003", "TOPPING004", "PATTY003", "PATTY003"],
+      "combo": true,
+      "size": "regular",
+      "category": "burgers",
+      "description": "Two beef patties with a slice of cheese, pickles, onions, ketchup, and mustard."
+    },
+    {
+      "name": "McChicken",
+      "id": "CHICK001",
+      "price": 4.99,
+      "ingredients": ["SAUCE002", "TOPPING001", "PATTY004"],
+      "combo": true,
+      "size": "regular",
+      "category": "chicken",
+      "description": "Crispy chicken patty topped with lettuce and mayo on a toasted bun."
+    },
+    {
+      "name": "Spicy McChicken",
+      "id": "CHICK002",
+      "price": 5.29,
+      "ingredients": ["SAUCE002", "TOPPING001", "PATTY005"],
+      "combo": true,
+      "size": "regular",
+      "category": "chicken",
+      "description": "Spicy crispy chicken patty topped with lettuce and mayo on a toasted bun."
+    },
+    {
+      "name": "Crispy Chicken Sandwich",
+      "id": "CHICK003",
+      "price": 5.49,
+      "ingredients": ["SAUCE002", "TOPPING002", "PATTY006"],
+      "combo": true,
+      "size": "regular",
+      "category": "chicken",
+      "description": "Crispy chicken filet topped with pickles on a toasted potato roll."
+    },
+    {
+      "name": "Spicy Crispy Chicken Sandwich",
+      "id": "CHICK004",
+      "price": 5.79,
+      "ingredients": ["SAUCE002", "SAUCE013", "TOPPING002", "PATTY007"],
+      "combo": true,
+      "size": "regular",
+      "category": "chicken",
+      "description": "Spicy crispy chicken filet with spicy pepper sauce, topped with pickles on a toasted potato roll."
+    },
+    {
+      "name": "Deluxe Crispy Chicken Sandwich",
+      "id": "CHICK005",
+      "price": 6.29,
+      "ingredients": ["SAUCE002", "TOPPING001", "TOPPING002", "TOPPING008", "PATTY006"],
+      "combo": true,
+      "size": "regular",
+      "category": "chicken",
+      "description": "Crispy chicken filet topped with lettuce, roma tomatoes, and mayo on a toasted potato roll."
+    },
+    {
+      "name": "Filet-O-Fish",
+      "id": "FISH001",
+      "price": 5.49,
+      "ingredients": ["SAUCE003", "TOPPING004", "PATTY008"],
+      "combo": true,
+      "size": "regular",
+      "category": "fish",
+      "description": "Wild-caught fish filet on a steamed bun with tartar sauce and American cheese."
+    },
+    {
+      "name": "Chicken McNuggets (4 pc)",
+      "id": "NUG001",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": true,
+      "size": "small",
+      "category": "chicken",
+      "description": "Four crispy chicken nuggets, perfect for dipping."
+    },
+    {
+      "name": "Chicken McNuggets (6 pc)",
+      "id": "NUG002",
+      "price": 4.49,
+      "ingredients": [],
+      "combo": true,
+      "size": "regular",
+      "category": "chicken",
+      "description": "Six crispy chicken nuggets, perfect for dipping."
+    },
+    {
+      "name": "Chicken McNuggets (10 pc)",
+      "id": "NUG003",
+      "price": 6.49,
+      "ingredients": [],
+      "combo": true,
+      "size": "large",
+      "category": "chicken",
+      "description": "Ten crispy chicken nuggets, perfect for dipping."
+    },
+    {
+      "name": "Chicken McNuggets (20 pc)",
+      "id": "NUG004",
+      "price": 9.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "extra large",
+      "category": "chicken",
+      "description": "Twenty crispy chicken nuggets, perfect for dipping or sharing."
+    },
+    {
+      "name": "Chicken McNuggets (40 pc)",
+      "id": "NUG005",
+      "price": 17.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "party",
+      "category": "chicken",
+      "description": "Forty crispy chicken nuggets, perfect for sharing."
+    },
+    {
+      "name": "Spicy Chicken McNuggets (6 pc)",
+      "id": "NUG006",
+      "price": 4.99,
+      "ingredients": [],
+      "combo": true,
+      "size": "regular",
+      "category": "chicken",
+      "description": "Six spicy crispy chicken nuggets with a zesty breading."
+    },
+    {
+      "name": "Spicy Chicken McNuggets (10 pc)",
+      "id": "NUG007",
+      "price": 6.99,
+      "ingredients": [],
+      "combo": true,
+      "size": "large",
+      "category": "chicken",
+      "description": "Ten spicy crispy chicken nuggets with a zesty breading."
+    },
+    {
+      "name": "World Famous Fries (Small)",
       "id": "SIDE001",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "sides",
+      "description": "Crispy golden fries made from premium potatoes."
+    },
+    {
+      "name": "World Famous Fries (Medium)",
+      "id": "SIDE002",
       "price": 2.99,
       "ingredients": [],
       "combo": false,
@@ -41,64 +221,375 @@
       "description": "Crispy golden fries made from premium potatoes."
     },
     {
-      "name": "Chicken Nuggets (6 pcs)",
-      "id": "SIDE002",
-      "price": 4.49,
-      "ingredients": ["SAUCE006"],
+      "name": "World Famous Fries (Large)",
+      "id": "SIDE003",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "sides",
+      "description": "Crispy golden fries made from premium potatoes."
+    },
+    {
+      "name": "Apple Slices",
+      "id": "SIDE004",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "sides",
+      "description": "Fresh, crisp apple slices that are a wholesome snack prepared ready to eat."
+    },
+    {
+      "name": "Side Salad",
+      "id": "SIDE005",
+      "price": 3.49,
+      "ingredients": ["TOPPING001", "TOPPING008", "TOPPING009"],
+      "combo": false,
+      "size": "small",
+      "category": "sides",
+      "description": "A mixed green salad with tomatoes and cucumbers."
+    },
+    {
+      "name": "Mozzarella Sticks (3 pc)",
+      "id": "SIDE006",
+      "price": 2.99,
+      "ingredients": ["SAUCE014"],
+      "combo": false,
+      "size": "small",
+      "category": "sides",
+      "description": "Three crispy, breaded mozzarella cheese sticks with marinara dipping sauce."
+    },
+    {
+      "name": "Onion Rings",
+      "id": "SIDE007",
+      "price": 3.49,
+      "ingredients": [],
       "combo": false,
       "size": "medium",
       "category": "sides",
-      "description": "Six crispy chicken nuggets, perfect for dipping."
+      "description": "Golden crispy onion rings."
     },
     {
-      "name": "Ketchup",
-      "id": "SAUCE001",
-      "price": 0.50,
-      "ingredients": [],
+      "name": "Bacon Ranch Grilled Chicken Salad",
+      "id": "SALAD001",
+      "price": 6.99,
+      "ingredients": ["TOPPING001", "TOPPING004", "TOPPING008", "TOPPING009", "TOPPING010", "PATTY009"],
       "combo": false,
-      "size": "none",
-      "category": "condiments",
-      "description": "Tomato-based condiment with a sweet and tangy flavor."
+      "size": "regular",
+      "category": "salads",
+      "description": "Grilled chicken, bacon, cheese, and vegetables on a bed of mixed greens."
     },
     {
-      "name": "Mayonnaise",
-      "id": "SAUCE002",
-      "price": 0.30,
-      "ingredients": [],
+      "name": "Bacon Ranch Crispy Chicken Salad",
+      "id": "SALAD002",
+      "price": 6.99,
+      "ingredients": ["TOPPING001", "TOPPING004", "TOPPING008", "TOPPING009", "TOPPING010", "PATTY010"],
       "combo": false,
-      "size": "none",
-      "category": "condiments",
-      "description": "A rich and creamy classic spread made with eggs and oil."
+      "size": "regular",
+      "category": "salads",
+      "description": "Crispy chicken, bacon, cheese, and vegetables on a bed of mixed greens."
+    },
+
+    {
+      "name": "Egg McMuffin",
+      "id": "BREAK001",
+      "price": 3.99,
+      "ingredients": ["TOPPING004", "TOPPING011", "TOPPING012"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Freshly cracked egg, Canadian bacon, and American cheese on a toasted English muffin."
     },
     {
-      "name": "Big Mac Sauce",
-      "id": "SAUCE004",
-      "price": 0.75,
-      "ingredients": [],
-      "combo": false,
-      "size": "none",
-      "category": "condiments",
-      "description": "Tangy and creamy sauce that makes the Big Mac legendary."
+      "name": "Sausage McMuffin",
+      "id": "BREAK002",
+      "price": 2.99,
+      "ingredients": ["TOPPING004", "TOPPING013"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Savory sausage patty and American cheese on a toasted English muffin."
     },
     {
-      "name": "Mustard",
-      "id": "SAUCE005",
-      "price": 0.25,
-      "ingredients": [],
-      "combo": false,
-      "size": "none",
-      "category": "condiments",
-      "description": "Classic yellow mustard with a tangy kick."
+      "name": "Sausage McMuffin with Egg",
+      "id": "BREAK003",
+      "price": 4.49,
+      "ingredients": ["TOPPING004", "TOPPING011", "TOPPING013"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Savory sausage patty, freshly cracked egg, and American cheese on a toasted English muffin."
     },
     {
-      "name": "BBQ Sauce",
-      "id": "SAUCE006",
-      "price": 0.50,
+      "name": "Bacon, Egg & Cheese Biscuit",
+      "id": "BREAK004",
+      "price": 4.49,
+      "ingredients": ["TOPPING004", "TOPPING010", "TOPPING011"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Crispy bacon, freshly cracked egg, and American cheese on a buttermilk biscuit."
+    },
+    {
+      "name": "Sausage Biscuit",
+      "id": "BREAK005",
+      "price": 2.99,
+      "ingredients": ["TOPPING013"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Savory sausage patty on a buttermilk biscuit."
+    },
+    {
+      "name": "Sausage Biscuit with Egg",
+      "id": "BREAK006",
+      "price": 4.49,
+      "ingredients": ["TOPPING011", "TOPPING013"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Savory sausage patty and freshly cracked egg on a buttermilk biscuit."
+    },
+    {
+      "name": "Bacon, Egg & Cheese McGriddles",
+      "id": "BREAK007",
+      "price": 4.99,
+      "ingredients": ["TOPPING004", "TOPPING010", "TOPPING011"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Crispy bacon, freshly cracked egg, and American cheese on warm griddle cakes with maple flavor."
+    },
+    {
+      "name": "Sausage McGriddles",
+      "id": "BREAK008",
+      "price": 3.49,
+      "ingredients": ["TOPPING013"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Savory sausage patty on warm griddle cakes with maple flavor."
+    },
+    {
+      "name": "Sausage, Egg & Cheese McGriddles",
+      "id": "BREAK009",
+      "price": 4.99,
+      "ingredients": ["TOPPING004", "TOPPING011", "TOPPING013"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Savory sausage patty, freshly cracked egg, and American cheese on warm griddle cakes with maple flavor."
+    },
+    {
+      "name": "Hotcakes",
+      "id": "BREAK010",
+      "price": 3.99,
+      "ingredients": ["SAUCE007"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Three golden-brown hotcakes with real butter and maple syrup."
+    },
+    {
+      "name": "Hotcakes and Sausage",
+      "id": "BREAK011",
+      "price": 4.99,
+      "ingredients": ["SAUCE007", "TOPPING013"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Three golden-brown hotcakes with real butter and maple syrup, served with a savory sausage patty."
+    },
+    {
+      "name": "Fruit & Maple Oatmeal",
+      "id": "BREAK012",
+      "price": 3.49,
+      "ingredients": ["TOPPING014", "TOPPING015"],
+      "combo": true,
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Creamy oatmeal with fresh red and green apples, cranberries, and raisins, served with light cream."
+    },
+    {
+      "name": "Hash Browns",
+      "id": "BREAK013",
+      "price": 1.99,
       "ingredients": [],
       "combo": false,
-      "size": "none",
-      "category": "condiments",
-      "description": "Smoky and sweet barbecue sauce."
+      "size": "regular",
+      "category": "breakfast",
+      "description": "Crispy, golden-brown hash browns prepared fresh daily."
+    },
+    {
+      "name": "Hamburger Happy Meal",
+      "id": "HAPPY001",
+      "price": 4.99,
+      "ingredients": ["BURG006", "SIDE001", "DRINK013"],
+      "combo": true,
+      "size": "kids",
+      "category": "happy_meal",
+      "description": "A hamburger, kid-sized fries, apple slices, and choice of beverage, plus a toy."
+    },
+    {
+      "name": "Cheeseburger Happy Meal",
+      "id": "HAPPY002",
+      "price": 5.29,
+      "ingredients": ["BURG004", "SIDE001", "DRINK013"],
+      "combo": true,
+      "size": "kids",
+      "category": "happy_meal",
+      "description": "A cheeseburger, kid-sized fries, apple slices, and choice of beverage, plus a toy."
+    },
+    {
+      "name": "4-piece Chicken McNuggets Happy Meal",
+      "id": "HAPPY003",
+      "price": 5.49,
+      "ingredients": ["NUG001", "SIDE001", "DRINK013"],
+      "combo": true,
+      "size": "kids",
+      "category": "happy_meal",
+      "description": "Four chicken McNuggets, kid-sized fries, apple slices, and choice of beverage, plus a toy."
+    },
+    {
+      "name": "6-piece Chicken McNuggets Happy Meal",
+      "id": "HAPPY004",
+      "price": 5.99,
+      "ingredients": ["NUG002", "SIDE001", "DRINK013"],
+      "combo": true,
+      "size": "kids",
+      "category": "happy_meal",
+      "description": "Six chicken McNuggets, kid-sized fries, apple slices, and choice of beverage, plus a toy."
+    },
+    {
+      "name": "Premium Roast Coffee",
+      "id": "CAFE001",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Freshly brewed 100% Arabica bean coffee."
+    },
+    {
+      "name": "Iced Coffee",
+      "id": "CAFE002",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee served over ice."
+    },
+    {
+      "name": "Caramel Iced Coffee",
+      "id": "CAFE003",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee with caramel flavor, served over ice."
+    },
+    {
+      "name": "Vanilla Iced Coffee",
+      "id": "CAFE004",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee with vanilla flavor, served over ice."
+    },
+    {
+      "name": "Latte",
+      "id": "CAFE005",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, topped with a layer of foam."
+    },
+    {
+      "name": "Vanilla Latte",
+      "id": "CAFE006",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and vanilla flavor, topped with a layer of foam."
+    },
+    {
+      "name": "Caramel Latte",
+      "id": "CAFE007",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and caramel flavor, topped with a layer of foam."
+    },
+    {
+      "name": "Cappuccino",
+      "id": "CAFE008",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and a thick layer of foam."
+    },
+    {
+      "name": "Caramel Macchiato",
+      "id": "CAFE009",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, vanilla syrup, and caramel drizzle."
+    },
+    {
+      "name": "Mocha",
+      "id": "CAFE010",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, chocolate syrup, and whipped cream."
+    },
+    {
+      "name": "Iced Mocha",
+      "id": "CAFE011",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Espresso with milk, chocolate syrup, and whipped cream, served over ice."
+    },
+    {
+      "name": "Caramel Frappé",
+      "id": "CAFE012",
+      "price": 4.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Blended ice, espresso, milk, caramel syrup, topped with whipped cream and caramel drizzle."
+    },
+    {
+      "name": "Mocha Frappé",
+      "id": "CAFE013",
+      "price": 4.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "mccafe",
+      "description": "Blended ice, espresso, milk, chocolate syrup, topped with whipped cream and chocolate drizzle."
     },
     {
       "name": "Coca-Cola",
@@ -111,8 +602,18 @@
       "description": "Refreshing, ice-cold Coca-Cola."
     },
     {
-      "name": "Sprite",
+      "name": "Diet Coke",
       "id": "DRINK002",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "drinks",
+      "description": "Zero-calorie Diet Coke with a crisp taste."
+    },
+    {
+      "name": "Sprite",
+      "id": "DRINK003",
       "price": 1.99,
       "ingredients": [],
       "combo": false,
@@ -121,14 +622,64 @@
       "description": "Lemon-lime soda with a crisp taste."
     },
     {
-      "name": "Vanilla Milkshake",
-      "id": "DRINK003",
-      "price": 3.99,
+      "name": "Sweet Tea",
+      "id": "DRINK004",
+      "price": 1.99,
       "ingredients": [],
       "combo": false,
       "size": "medium",
       "category": "drinks",
-      "description": "Creamy vanilla milkshake topped with whipped cream."
+      "description": "Brewed tea with a sweet taste."
+    },
+    {
+      "name": "Unsweetened Iced Tea",
+      "id": "DRINK005",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "drinks",
+      "description": "Brewed tea served over ice."
+    },
+    {
+      "name": "Minute Maid Orange Juice",
+      "id": "DRINK006",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "drinks",
+      "description": "100% orange juice."
+    },
+    {
+      "name": "Milk",
+      "id": "DRINK007",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "Low-fat white milk."
+    },
+    {
+      "name": "Chocolate Milk",
+      "id": "DRINK008",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "Low-fat chocolate milk."
+    },
+    {
+      "name": "Dasani Bottled Water",
+      "id": "DRINK009",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "drinks",
+      "description": "Purified water that's fresh, clean, and clear."
     },
     {
       "name": "Apple Pie",
@@ -141,114 +692,444 @@
       "description": "Warm apple filling wrapped in a flaky, golden-brown crust."
     },
     {
-      "name": "McFlurry with Oreo",
+      "name": "Blueberry Muffin",
       "id": "DESSERT002",
-      "price": 3.99,
+      "price": 2.99,
       "ingredients": [],
       "combo": false,
-      "size": "medium",
+      "size": "single",
       "category": "desserts",
-      "description": "Soft serve ice cream blended with Oreo cookie pieces."
+      "description": "Soft, moist muffin filled with blueberries and topped with a streusel crumb topping."
     },
     {
-      "name": "Egg McMuffin",
-      "id": "BREAK001",
+      "name": "Cinnamon Roll",
+      "id": "DESSERT003",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "single",
+      "category": "desserts",
+      "description": "Warm cinnamon roll filled with cinnamon, topped with cream cheese icing."
+    },
+    {
+      "name": "Chocolate Chip Cookie",
+      "id": "DESSERT004",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "single",
+      "category": "desserts",
+      "description": "Soft, freshly baked cookie with chocolate chips."
+    },
+    {
+      "name": "McFlurry with OREO Cookies",
+      "id": "DESSERT005",
       "price": 3.99,
-      "ingredients": ["TOPPING005", "TOPPING006"],
-      "combo": true,
-      "size": "regular",
-      "category": "breakfast",
-      "description": "Freshly cracked egg, Canadian bacon, and melted cheese on a toasted English muffin."
-    },
-    {
-      "name": "Hash Browns",
-      "id": "BREAK002",
-      "price": 2.49,
       "ingredients": [],
       "combo": false,
       "size": "regular",
-      "category": "breakfast",
-      "description": "Crispy, golden-brown hash browns."
+      "category": "desserts",
+      "description": "Creamy vanilla soft serve with OREO cookie pieces blended throughout."
     },
     {
-      "name": "Hotcakes",
-      "id": "BREAK003",
-      "price": 4.99,
-      "ingredients": ["SAUCE007"],
+      "name": "McFlurry with M&M'S Candies",
+      "id": "DESSERT006",
+      "price": 3.99,
+      "ingredients": [],
       "combo": false,
       "size": "regular",
-      "category": "breakfast",
-      "description": "Fluffy hotcakes served with syrup."
+      "category": "desserts",
+      "description": "Creamy vanilla soft serve with M&M'S chocolate candies blended throughout."
+    },
+    {
+      "name": "Vanilla Cone",
+      "id": "DESSERT007",
+      "price": 1.79,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "desserts",
+      "description": "Creamy vanilla soft serve in a crispy cone."
+    },
+    {
+      "name": "Hot Fudge Sundae",
+      "id": "DESSERT008",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "desserts",
+      "description": "Creamy vanilla soft serve topped with hot fudge sauce."
+    },
+    {
+      "name": "Hot Caramel Sundae",
+      "id": "DESSERT009",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "desserts",
+      "description": "Creamy vanilla soft serve topped with warm caramel sauce."
+    },
+    {
+      "name": "Ketchup",
+      "id": "SAUCE001",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Classic tomato ketchup."
+    },
+    {
+      "name": "Mayonnaise",
+      "id": "SAUCE002",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Creamy mayonnaise."
+    },
+    {
+      "name": "Tartar Sauce",
+      "id": "SAUCE003",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Tangy tartar sauce."
+    },
+    {
+      "name": "Big Mac Sauce",
+      "id": "SAUCE004",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Special sauce for Big Mac."
+    },
+    {
+      "name": "Mustard",
+      "id": "SAUCE005",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Yellow mustard."
+    },
+    {
+      "name": "BBQ Sauce",
+      "id": "SAUCE006",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Tangy barbecue sauce."
     },
     {
       "name": "Maple Syrup",
       "id": "SAUCE007",
-      "price": 0.50,
+      "price": 0.00,
       "ingredients": [],
       "combo": false,
-      "size": "none",
+      "size": "packet",
       "category": "condiments",
-      "description": "Sweet maple syrup for pancakes and hotcakes."
+      "description": "Sweet maple syrup."
+    },
+    {
+      "name": "Sweet 'N Sour Sauce",
+      "id": "SAUCE008",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Sweet and tangy sauce."
+    },
+    {
+      "name": "Honey Mustard Sauce",
+      "id": "SAUCE009",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Creamy honey mustard sauce."
+    },
+    {
+      "name": "Ranch Sauce",
+      "id": "SAUCE010",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Creamy ranch dressing."
+    },
+    {
+      "name": "Habanero Ranch",
+      "id": "SAUCE011",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Spicy habanero ranch sauce."
+    },
+    {
+      "name": "Cane's Sauce",
+      "id": "SAUCE012",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Cajun-inflected sauce from Raising Cane's."
+    },
+    {
+      "name": "Arby's Horsey Sauce",
+      "id": "SAUCE013",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Creamy horseradish sauce."
+    },
+    {
+      "name": "Marinara Sauce",
+      "id": "SAUCE014",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Italian-style marinara sauce."
+    },
+    {
+      "name": "Beef Patty (Big Mac)",
+      "id": "PATTY001",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "All-beef patty for Big Mac."
+    },
+    {
+      "name": "Quarter Pound Beef Patty",
+      "id": "PATTY002",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "quarter pound",
+      "category": "patties",
+      "description": "Quarter-pound beef patty."
+    },
+    {
+      "name": "Cheeseburger Beef Patty",
+      "id": "PATTY003",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "Beef patty for cheeseburger."
+    },
+    {
+      "name": "Chicken Patty (McChicken)",
+      "id": "PATTY004",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "Crispy chicken patty for McChicken."
+    },
+    {
+      "name": "Spicy Chicken Patty",
+      "id": "PATTY005",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "Spicy crispy chicken patty."
+    },
+    {
+      "name": "Crispy Chicken Filet",
+      "id": "PATTY006",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "Crispy chicken filet."
+    },
+    {
+      "name": "Spicy Crispy Chicken Filet",
+      "id": "PATTY007",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "Spicy crispy chicken filet."
+    },
+    {
+      "name": "Fish Filet",
+      "id": "PATTY008",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "Wild-caught fish filet."
+    },
+    {
+      "name": "Grilled Chicken Patty",
+      "id": "PATTY009",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "Grilled chicken patty."
+    },
+    {
+      "name": "Crispy Chicken Patty",
+      "id": "PATTY010",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "patties",
+      "description": "Crispy chicken patty."
     },
     {
       "name": "Lettuce",
       "id": "TOPPING001",
-      "price": 0.10,
+      "price": 0.00,
       "ingredients": [],
       "combo": false,
-      "size": "none",
+      "size": "regular",
       "category": "toppings",
-      "description": "Freshly shredded lettuce."
+      "description": "Fresh, crisp lettuce leaves."
     },
     {
       "name": "Pickles",
       "id": "TOPPING002",
-      "price": 0.10,
+      "price": 0.00,
       "ingredients": [],
       "combo": false,
-      "size": "none",
+      "size": "regular",
       "category": "toppings",
-      "description": "Tangy and crunchy pickles."
+      "description": "Tangy dill pickle slices."
     },
     {
       "name": "Onions",
       "id": "TOPPING003",
-      "price": 0.10,
+      "price": 0.00,
       "ingredients": [],
       "combo": false,
-      "size": "none",
+      "size": "regular",
       "category": "toppings",
-      "description": "Diced onions for extra flavor."
+      "description": "Diced white onions."
     },
     {
-      "name": "Cheddar Cheese",
+      "name": "Cheese",
       "id": "TOPPING004",
       "price": 0.50,
       "ingredients": [],
       "combo": false,
-      "size": "none",
+      "size": "regular",
       "category": "toppings",
-      "description": "Melted cheddar cheese."
+      "description": "Slice of American cheese."
+    },
+    {
+      "name": "Tomatoes",
+      "id": "TOPPING008",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "toppings",
+      "description": "Fresh sliced tomatoes."
+    },
+    {
+      "name": "Cucumbers",
+      "id": "TOPPING009",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "toppings",
+      "description": "Sliced cucumbers."
+    },
+    {
+      "name": "Bacon",
+      "id": "TOPPING010",
+      "price": 1.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "toppings",
+      "description": "Crispy bacon strips."
     },
     {
       "name": "Egg",
-      "id": "TOPPING005",
-      "price": 0.50,
+      "id": "TOPPING011",
+      "price": 1.00,
       "ingredients": [],
       "combo": false,
-      "size": "none",
+      "size": "regular",
       "category": "toppings",
       "description": "Freshly cracked egg."
     },
     {
       "name": "Canadian Bacon",
-      "id": "TOPPING006",
+      "id": "TOPPING012",
       "price": 1.00,
       "ingredients": [],
       "combo": false,
-      "size": "none",
+      "size": "regular",
       "category": "toppings",
-      "description": "Savory, thinly sliced Canadian bacon."
+      "description": "Sliced Canadian bacon."
+    },
+    {
+      "name": "Sausage Patty",
+      "id": "TOPPING013",
+      "price": 1.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "toppings",
+      "description": "Savory sausage patty."
+    },
+    {
+      "name": "Apple Slices",
+      "id": "TOPPING014",
+      "price": 0.50,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "toppings",
+      "description": "Fresh apple slices."
+    },
+    {
+      "name": "Cranberries",
+      "id": "TOPPING015",
+      "price": 0.50,
+      "ingredients": [],
+      "combo": false,
+      "size": "regular",
+      "category": "toppings",
+      "description": "Dried cranberries."
     }
   ]
 }
