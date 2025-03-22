@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Text-To-Eat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="menu-page">
+    <header>
+        <div class="logo">Text-To-Eat</div>
+        <div class="header-buttons">
+            <button id="cart-btn" class="btn cart-icon-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count" class="cart-count">0</span>
+            </button>
+            <button id="checkout-btn" class="btn primary" onclick="window.location.href='{{ url_for('checkout_page') }}'">CHECKOUT</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="menu-container">
+            <div class="menu-section">
+                <div class="categories">
+                    <ul class="category-tabs">
+                        {% for category in categories %}
+                            <li>
+                                <a href="#" class="category-tab {% if loop.first %}active{% endif %}" data-category="{{ category }}">
+                                    {{ category|capitalize }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="category-sections">
+                    {% for category in categories %}
+                        <div id="category-{{ category }}" class="category-section {% if loop.first %}active{% endif %}">
+                            <div class="menu-items">
+                                {% for item in menu_items %}
+                                    {% if item.category == category %}
+                                    <div class="menu-item" data-id="{{ item.id }}" data-combo="{{ item.combo|lower }}">
+                                        <div class="item-details">
+                                            <h4>{{ item.name }}</h4>
+                                            <p class="item-description">{{ item.description }}</p>
+                                            <p class="price">${{ item.price }}</p>
+                                        </div>
+                                        
+                                        <div class="item-actions">
+                                            {% if item.ingredients|length > 0 %}
+                                            <button class="customize-btn">Customize</button>
+                                            {% endif %}
+                                            
+                                            {% if item.combo %}
+                                            <button class="combo-btn">Order as Combo (+$2.99)</button>
+                                            {% endif %}
+                                            
+                                            <button class="add-to-cart-btn">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="llm-interface">
+                <h2>Text-To-Eat Chat</h2>
+                <div id="chat-messages" class="chat-messages">
+                    <div class="message system">
+                        <p>Welcome to McDonald's! How can I help you today?</p>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <textarea id="llm-input" placeholder="Type your order here... (e.g., 'I want a Big Mac and fries')"></textarea>
+                    <button id="llm-submit" class="btn primary">Send</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="cart-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Your Cart</h2>
+                <div id="cart-items">
+                </div>
+                <div class="cart-total">
+                    <h3>Total: <span id="cart-total-price">$0.00</span></h3>
+                </div>
+                <button id="proceed-checkout" class="btn primary">Proceed to Checkout</button>
+            </div>
+        </div>
+        
+        <div id="customize-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Customize Your Item</h2>
+                <h3 id="customize-item-name"></h3>
+                
+                <div class="ingredient-controls">
+                    <h4>Current Ingredients (uncheck to remove)</h4>
+                    <div id="current-ingredients" class="ingredients-list">
+                    </div>
+                    
+                    <h4>Add-Ons</h4>
+                    <div id="add-ons" class="ingredients-list">
+                    </div>
+                </div>
+                
+                <div class="customize-price">
+                    <p>Item Price: $<span id="customize-base-price">0.00</span></p>
+                    <p>Add-Ons: $<span id="customize-extras-price">0.00</span></p>
+                    <h3>Total: $<span id="customize-total-price">0.00</span></h3>
+                </div>
+                
+                <div class="customize-actions">
+                    <button id="cancel-customize" class="btn">Cancel</button>
+                    <button id="add-customized" class="btn primary">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="combo-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Complete Your Combo</h2>
+                <h3 id="combo-base-item-name"></h3>
+                
+                <div class="combo-items">
+                    <div class="combo-fries">
+                        <h4>Fries Included</h4>
+                        <p>Medium French Fries included in your combo</p>
+                    </div>
+                    
+                    <div class="combo-drink-selection">
+                        <h4>Select Your Drink</h4>
+                        <div id="drink-options" class="drink-options">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="combo-price">
+                    <p>Base Item: $<span id="combo-base-price">0.00</span></p>
+                    <p>Combo Add-on: $2.99</p>
+                    <h3>Total: $<span id="combo-total-price">0.00</span></h3>
+                </div>
+                
+                <div class="combo-actions">
+                    <button id="cancel-combo" class="btn">Cancel</button>
+                    <button id="add-combo" class="btn primary">Add Combo to Cart</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const categorySections = document.querySelectorAll('.category-section');
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs and sections
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    categorySections.forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Get the category and activate the corresponding section
+                    const category = this.getAttribute('data-category');
+                    document.getElementById('category-' + category).classList.add('active');
+                });
+            });
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

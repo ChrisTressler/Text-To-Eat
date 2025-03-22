@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Text-To-Eat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="checkout-page">
+    <header>
+        <div class="logo">Text-To-Eat</div>
+        <div class="header-buttons">
+            <button id="back-btn" class="btn" onclick="window.location.href='{{ url_for('menu_page') }}'">Back to Menu</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="checkout-container">
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                
+                <div class="order-items">
+                    {% if cart_items %}
+                        <ul>
+                            {% for item_id, item in cart_items.items() %}
+                                <li>
+                                    <span class="item-name">{{ item.name }}</span>
+                                    <span class="item-quantity">x{{ item.quantity }}</span>
+                                    <span class="item-price">${{ '%.2f'|format(item.price * item.quantity) }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="order-total">
+                            <h3>Total: <span>${{ '%.2f'|format(cart_total) }}</span></h3>
+                        </div>
+                    {% else %}
+                        <p>Your cart is empty. <a href="{{ url_for('menu_page') }}">Add some items</a>.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="timer-display">
+                <h2>Order Time</h2>
+                <div class="timer">{{ time_display }}</div>
+                <p class="timer-note">Time spent on this order</p>
+            </div>
+            
+            <div class="checkout-actions">
+                <button id="place-order-btn" class="btn primary" onclick="completeOrder()">PLACE ORDER</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('place-order-btn').addEventListener('click', function() {
+            alert('Order placed successfully! Thank you for your order.');
+            window.location.href = "{{ url_for('start_page') }}";
+        });
+    </script>
+</body>
+</html>

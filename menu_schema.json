@@ -1,0 +1,41 @@
+{
+    "type": "object",
+    "properties": {
+        "menuItems": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "notes": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "price",
+                    "quantity"
+                ]
+            }
+        },
+        "total": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "menuItems",
+        "total"
+    ]
+}
