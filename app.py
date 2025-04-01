@@ -4,14 +4,12 @@ import time
 from datetime import datetime
 import json
 import sys
-from openai import OpenAI
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from menu import Menu, MenuItem
 from shopping_cart import ShoppingCart
-
-client = OpenAI()
+from new_agent import client, load_current_order, save_order, initialize_new_order, process_order_request
 
 app = Flask(__name__)
 app.secret_key = 'fastfoodkiosk_secretkey'
@@ -27,7 +25,7 @@ class CustomMenu(Menu):
                 id=item['id'],
                 price=item['price'],
                 ingredients=item['ingredients'],
-                combo=item['combo'],
+                combo=False,
                 size=item['size'],
                 category=item['category'],
                 description=item['description']
@@ -247,20 +245,21 @@ class CustomizedMenuItem:
         
         self.category = base_item.category
         self.size = base_item.size
-        self.combo = base_item.combo
+        self.combo = False
         self.description = base_item.description
 
 menu = CustomMenu()
 
 try:
     menu.load_menu("menu_data.json")
-    print(f"Menu loaded successfully with {len(menu.items)} items")
 except Exception as e:
     print(f"Error loading menu: {e}")
 
 @app.route('/')
 def start_page():
     session.clear()
+    # Initialize a new empty order
+    initialize_new_order()
     return render_template('index.html')
 
 @app.route('/menu')
@@ -268,11 +267,9 @@ def menu_page():
     if 'start_time' not in session:
         session['start_time'] = time.time()
         
-    if 'cart_id' not in session:
-        cart_id = str(datetime.now().timestamp())
-        session['cart_id'] = cart_id
-        session['cart_items'] = {}
-        session['cart_total'] = 0.0
+    # Ensure we have a valid order file
+    if not os.path.exists('order.json'):
+        initialize_new_order()
         
     excluded_categories = ['ingredients', 'toppings', 'condiments']
     
@@ -301,13 +298,13 @@ def checkout_page():
     seconds = int(elapsed_time % 60)
     time_display = f"{minutes}m {seconds}s"
     
-    cart_items = session.get('cart_items', {})
-    cart_total = session.get('cart_total', 0.0)
+    # Load current order from order.json
+    current_order = load_current_order()
     
     return render_template('checkout.html', 
                           time_display=time_display,
-                          cart_items=cart_items,
-                          cart_total=cart_total)
+                          cart_items=current_order.get("menuItems", []),
+                          cart_total=current_order.get("total", 0.0))
 
 @app.route('/api/add_to_cart', methods=['POST'])
 def add_to_cart():
@@ -317,29 +314,70 @@ def add_to_cart():
     if not item:
         return jsonify({"success": False, "message": "Item not found"})
     
-    cart_items = session.get('cart_items', {})
+    # Load current order from order.json
+    current_order = load_current_order()
     
-    item_dict = {
-        'id': item.id,
-        'name': item.name,
-        'price': item.price,
-        'quantity': cart_items.get(item.id, {}).get('quantity', 0) + 1
-    }
+    # Prepare the order structure if needed
+    if "menuItems" not in current_order:
+        current_order["menuItems"] = []
     
-    cart_items[item.id] = item_dict
-    session['cart_items'] = cart_items
+    # Check if item already exists in order
+    item_exists = False
+    for order_item in current_order["menuItems"]:
+        if order_item["id"] == item_id:
+            order_item["quantity"] += 1
+            item_exists = True
+            break
     
-    session['cart_total'] = session.get('cart_total', 0.0) + item.price
+    # If item doesn't exist, add it
+    if not item_exists:
+        current_order["menuItems"].append({
+            "id": item_id,
+            "name": item.name,
+            "price": item.price,
+            "quantity": 1
+        })
     
-    session.modified = True
+    # Calculate the new total
+    current_order["total"] = sum(item["price"] * item["quantity"] for item in current_order["menuItems"])
     
-    return jsonify({"success": True, "cart": cart_items, "total": session['cart_total']})
+    # Save the updated order
+    save_order(current_order, menu.get_items())
+    
+    # Check if we should suggest sides/drinks or sauces
+    suggestion = None
+    suggestion_type = None
+    
+        # For fries, nuggets, and salads, suggest sauces
+    if item.category == "sides" or "nug" in item.id.lower() or item.category == "salads":
+        suggestion_type = "sauce"
+        suggestion = {
+            "message": "Would you like any sauce with that?",
+            "type": "sauce",
+            "item_id": item_id
+        }
+    # For burgers and sandwiches (entrees), suggest sides and drinks
+    elif item.category in ['burgers', 'chicken', 'fish']:
+        suggestion_type = "entree"
+        suggestion = {
+            "message": "Would you like to add a side or drink to your order?",
+            "type": "entree",
+            "item_id": item_id
+        }
+    
+    return jsonify({
+        "success": True, 
+        "cart": current_order["menuItems"], 
+        "total": current_order["total"],
+        "suggestion": suggestion,
+        "suggestion_type": suggestion_type
+    })
 
 @app.route('/api/clear_cart', methods=['POST'])
 def clear_cart():
-    session['cart_items'] = {}
-    session['cart_total'] = 0.0
-    session.modified = True
+    # Create an empty order and save it
+    empty_order = {"menuItems": [], "total": 0.0}
+    save_order(empty_order)
     
     return jsonify({
         "success": True,
@@ -348,13 +386,13 @@ def clear_cart():
 
 @app.route('/api/get_cart', methods=['GET'])
 def get_cart():
-    cart_items = session.get('cart_items', {})
-    cart_total = session.get('cart_total', 0.0)
+    # Load current order from order.json
+    current_order = load_current_order()
     
     return jsonify({
         "success": True,
-        "cart": cart_items,
-        "total": cart_total
+        "cart": current_order.get("menuItems", []),
+        "total": current_order.get("total", 0.0)
     })
 
 @app.route('/api/get_item_details', methods=['POST'])
@@ -381,342 +419,85 @@ def add_customized_item():
     
     custom_item = CustomizedMenuItem(base_item, removed_ingredients, added_ingredients)
     
-    cart_items = session.get('cart_items', {})
+    # Load current order from order.json
+    current_order = load_current_order()
     
-    item_dict = {
-        'id': custom_item.id,
-        'name': custom_item.name,
-        'price': custom_item.price,
-        'quantity': 1,
-        'customizations': {
-            'removed': removed_ingredients,
-            'added': added_ingredients
-        }
-    }
+    # Prepare the order structure if needed
+    if "menuItems" not in current_order:
+        current_order["menuItems"] = []
     
-    cart_items[custom_item.id] = item_dict
-    session['cart_items'] = cart_items
+    # Create the customized item entry
+    customization_notes = []
+    if removed_ingredients:
+        removed_names = []
+        for ing_id in removed_ingredients:
+            ing = menu.get_item_information(ing_id)
+            if ing:
+                removed_names.append(ing.name)
+            else:
+                removed_names.append(ing_id)  # Fallback to ID if name not found
+        customization_notes.append(f"Removed: {', '.join(removed_names)}")
     
-    session['cart_total'] = session.get('cart_total', 0.0) + custom_item.price
-    session.modified = True
+    if added_ingredients:
+        added_names = []
+        for ing_id in added_ingredients:
+            ing = menu.get_item_information(ing_id)
+            if ing:
+                added_names.append(ing.name)
+            else:
+                added_names.append(ing_id)  # Fallback to ID if name not found
+        customization_notes.append(f"Added: {', '.join(added_names)}")
     
-    return jsonify({"success": True, "cart": cart_items, "total": session['cart_total']})
+    # Add the item to the order
+    current_order["menuItems"].append({
+        "id": item_id,  # Still use the original item ID
+        "name": custom_item.name,
+        "price": custom_item.price,
+        "quantity": 1,
+        "notes": "; ".join(customization_notes)
+    })
+    
+    # Calculate the new total
+    current_order["total"] = sum(item["price"] * item["quantity"] for item in current_order["menuItems"])
+    
+    # Save the updated order
+    save_order(current_order, menu.get_items())
+    
+    return jsonify({
+        "success": True, 
+        "cart": current_order["menuItems"], 
+        "total": current_order["total"]
+    })
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '')
-    current_order = request.json.get('currentOrder', {"menuItems": [], "total": 0.0})
     conversation_history = request.json.get('conversationHistory', [])
     
-    if "items" in current_order and "menuItems" not in current_order:
-        current_order = {"menuItems": current_order["items"], "total": current_order.get("total", 0.0)}
-    
-    pending_item_key = 'pending_combo_item'
-    pending_item = session.get(pending_item_key, None)
-    
-    system_message = f"""You are a helpful fast food restaurant assistant.
-    You help customers place orders and understand the menu.
-    Here's a list of menu categories: burgers, sides, drinks, desserts, chicken, fish, breakfast, mccafe, Happy Meal, salads.
-    
-    IMPORTANT: When identifying items, be VERY specific and use exact names:
-    - For "coke" or "coca-cola", use "Coca-Cola" (not Diet Coke)
-    - For nuggets, specify the exact size (4pc, 6pc, 10pc, 20pc, or 40pc) and whether they're regular or spicy
-    - For fries, specify the size (Small, Medium, or Large) - default to Medium if not specified
-    - For specialty items, use the full name (e.g., "McFlurry with OREO Cookies" not just "McFlurry")
-    
-    COMBO MEAL HANDLING INSTRUCTIONS:
-    - When a customer orders a combo-eligible item, ask if they want to make it a combo
-    - DO NOT add the item to cart yet - set ORDER_TYPE to "potential_combo" and ACTION to "collect_more_info"
-    - If they say yes to a combo, ask which drink they want (default to Coca-Cola if unspecified)
-    - Only after confirming the drink choice, create the combo meal
-    - Combo meals always include Medium Fries and the selected drink
-    
-    CART MODIFICATION INSTRUCTIONS:
-    - When a customer asks to remove something, set ORDER_TYPE to "remove_item"
-    - When asked to clear the cart, set ORDER_TYPE to "clear_cart" 
-    - Be specific when identifying items to remove
-    - For removal requests, respond with a clear confirmation of what was removed
-    
-    Your response format should be:
-    ORDER_TYPE: [single_item, potential_combo, combo_meal, combo_drink_selection, remove_item, clear_cart, checkout, general_query]
-    MAIN_ITEM: [specific item name or "none"]
-    DRINK: [specific drink name or "none"]
-    CUSTOMIZATIONS: [comma-separated list of customizations or "none"]
-    ACTION: [add_to_cart, collect_more_info, remove_from_cart, clear_cart, checkout, respond_only]
-    MESSAGE: [Your conversational response to the customer]
-    
-    Examples:
-    For "I'd like a Big Mac" → "ORDER_TYPE: potential_combo\nMAIN_ITEM: Big Mac\nDRINK: none\nCUSTOMIZATIONS: none\nACTION: collect_more_info\nMESSAGE: Would you like to make that a Big Mac Combo with fries and a drink?"
-    
-    For "Yes, with a Sprite" → "ORDER_TYPE: combo_meal\nMAIN_ITEM: Big Mac\nDRINK: Sprite\nCUSTOMIZATIONS: none\nACTION: add_to_cart\nMESSAGE: Great! I've added a Big Mac Combo with Medium Fries and Sprite to your cart."
-    
-    For "I'll just have the sandwich by itself" → "ORDER_TYPE: single_item\nMAIN_ITEM: Big Mac\nDRINK: none\nCUSTOMIZATIONS: none\nACTION: add_to_cart\nMESSAGE: I've added a Big Mac to your cart."
-    """
-    
     try:
-        messages = [{"role": "system", "content": system_message}]
+        # Process the order request using the new agent
+        result = process_order_request(user_message, menu.get_items())
         
-        for msg in conversation_history:
-            role = "assistant" if msg.get("isBot", False) else "user"
-            messages.append({"role": role, "content": msg.get("message", "")})
-            
-        messages.append({"role": "user", "content": user_message})
+        message_to_user = result.get('message', '')
+        updated_order = result.get('updated_order', {})
         
-        completion = client.chat.completions.create(
-            model="gpt-4o",
-            messages=messages,
-        )
-        
-        assistant_response = completion.choices[0].message.content
-        
-        order_type = None
-        main_item = None
-        drink_item = None
-        customizations = []
-        action = None
-        message_to_user = assistant_response
-        
-        try:
-            order_type = assistant_response.split("ORDER_TYPE:")[1].split("\n")[0].strip().lower()
-            main_item_section = assistant_response.split("MAIN_ITEM:")[1].split("\n")[0].strip()
-            drink_section = assistant_response.split("DRINK:")[1].split("\n")[0].strip()
-            customization_section = assistant_response.split("CUSTOMIZATIONS:")[1].split("\n")[0].strip()
-            action = assistant_response.split("ACTION:")[1].split("\n")[0].strip().lower()
-            message_section = assistant_response.split("MESSAGE:")[1].strip()
-            
-            message_to_user = message_section
-            
-            if main_item_section.lower() != "none":
-                main_item = menu.find_item_by_name(main_item_section)
-                if not main_item:
-                    main_item = menu.find_item_by_name(main_item_section, fuzzy=True)
-            
-            if drink_section.lower() != "none":
-                drink_item = menu.find_item_by_name(drink_section)
-                if not drink_item:
-                    drink_item = menu.find_item_by_name(drink_section, fuzzy=True)
-            
-            if customization_section.lower() != "none":
-                customizations = [custom.strip() for custom in customization_section.split(",")]
-        
-        except Exception as e:
-            print(f"Error parsing LLM response: {e}")
-            order_type = "general_query"
-            action = "respond_only"
-            message_to_user = assistant_response
-        
-        items_to_add = []
-        removed_items = []
-        
-        if order_type == "potential_combo" and action == "collect_more_info" and main_item:
-            session[pending_item_key] = {
-                'id': main_item.id,
-                'name': main_item.name,
-                'customizations': customizations
-            }
-            session.modified = True
-        
-        elif order_type == "combo_meal" and action == "add_to_cart":
-            combo_main_item = None
-            
-            if main_item and main_item.combo:
-                combo_main_item = main_item
-            elif pending_item:
-                combo_main_item = menu.get_item_information(pending_item.get('id'))
-                customizations = pending_item.get('customizations', [])
-            
-            if combo_main_item:
-                fries = menu.find_item_by_name("World Famous Fries (Medium)")
-                
-                if not drink_item:
-                    drink_item = menu.find_item_by_name("Coca-Cola")
-                
-                if fries and drink_item:
-                    combo_id = f"COMBO-{combo_main_item.id}-{datetime.now().timestamp()}"
-                    cart_items = session.get('cart_items', {})
-                    
-                    base_combo_upcharge = 2.99
-                    combo_price = combo_main_item.price + base_combo_upcharge
-                    has_premium_drink = drink_item.price > 1.99
-                    
-                    if has_premium_drink:
-                        drink_upcharge = drink_item.price - 1.99
-                        combo_price += drink_upcharge
-                    
-                    combo_components = [
-                        {"id": combo_main_item.id, "name": combo_main_item.name, "is_premium": False},
-                        {"id": fries.id, "name": fries.name, "is_premium": False},
-                        {"id": drink_item.id, "name": drink_item.name, "is_premium": has_premium_drink}
-                    ]
-                    
-                    combo_item = {
-                        'id': combo_id,
-                        'name': f"{combo_main_item.name} Combo",
-                        'price': combo_price,
-                        'quantity': 1,
-                        'is_combo': True,
-                        'combo_items': combo_components,
-                        'has_premium_drink': has_premium_drink,
-                        'premium_info': "Premium drink" if has_premium_drink else ""
-                    }
-                    
-                    if customizations:
-                        removed_ingredients = []
-                        added_ingredients = []
-                        
-                        for custom in customizations:
-                            custom = custom.lower()
-                            if custom.startswith("no "):
-                                ingredient_name = custom[3:].strip()
-                                for ing in combo_main_item.ingredients:
-                                    if ingredient_name in ing.name.lower():
-                                        removed_ingredients.append(ing.id)
-                            elif custom.startswith("extra "):
-                                ingredient_name = custom[6:].strip()
-                                for potential_extra in menu.get_items():
-                                    if (potential_extra.category in ['toppings', 'condiments'] and 
-                                        ingredient_name in potential_extra.name.lower()):
-                                        added_ingredients.append(potential_extra.id)
-                        
-                        if removed_ingredients or added_ingredients:
-                            combo_item['customizations'] = {
-                                'removed': removed_ingredients,
-                                'added': added_ingredients
-                            }
-                    
-                    cart_items[combo_id] = combo_item
-                    session['cart_items'] = cart_items
-                    session['cart_total'] = session.get('cart_total', 0.0) + combo_price
-                    session.modified = True
-                    
-                    items_to_add.append(combo_main_item)
-                    
-                    session.pop(pending_item_key, None)
-                    session.modified = True
-        
-        elif order_type == "single_item" and action == "add_to_cart":
-            target_item = None
-            
-            if main_item:
-                target_item = main_item
-            elif pending_item:
-                target_item = menu.get_item_information(pending_item.get('id'))
-                customizations = pending_item.get('customizations', [])
-            
-            if target_item:
-                if customizations:
-                    removed_ingredients = []
-                    added_ingredients = []
-                    
-                    for custom in customizations:
-                        custom = custom.lower()
-                        if custom.startswith("no "):
-                            ingredient_name = custom[3:].strip()
-                            for ing in target_item.ingredients:
-                                if ingredient_name in ing.name.lower():
-                                    removed_ingredients.append(ing.id)
-                        elif custom.startswith("extra "):
-                            ingredient_name = custom[6:].strip()
-                            for potential_extra in menu.get_items():
-                                if (potential_extra.category in ['toppings', 'condiments'] and 
-                                    ingredient_name in potential_extra.name.lower()):
-                                    added_ingredients.append(potential_extra.id)
-                    
-                    custom_item = CustomizedMenuItem(target_item, removed_ingredients, added_ingredients)
-                    
-                    cart_items = session.get('cart_items', {})
-                    
-                    item_dict = {
-                        'id': custom_item.id,
-                        'name': custom_item.name,
-                        'price': custom_item.price,
-                        'quantity': 1,
-                        'customizations': {
-                            'removed': removed_ingredients,
-                            'added': added_ingredients
-                        }
-                    }
-                    
-                    cart_items[custom_item.id] = item_dict
-                    session['cart_items'] = cart_items
-                    
-                    session['cart_total'] = session.get('cart_total', 0.0) + custom_item.price
-                    session.modified = True
-                else:
-                    cart_items = session.get('cart_items', {})
-                    
-                    if target_item.id in cart_items:
-                        cart_items[target_item.id]['quantity'] += 1
-                    else:
-                        cart_items[target_item.id] = {
-                            'id': target_item.id,
-                            'name': target_item.name,
-                            'price': target_item.price,
-                            'quantity': 1
-                        }
-                    
-                    session['cart_items'] = cart_items
-                    session['cart_total'] = session.get('cart_total', 0.0) + target_item.price
-                    session.modified = True
-                
-                items_to_add.append(target_item)
-                
-                session.pop(pending_item_key, None)
-                session.modified = True
-        
-        elif order_type == "remove_item" or action == "remove_from_cart":
-            item_to_remove = main_item_section if main_item_section.lower() != "none" else ""
-            
-            if not item_to_remove and ("all" in user_message.lower() or "everything" in user_message.lower()):
-                for item_id, item_data in list(session.get('cart_items', {}).items()):
-                    removed_items.append(item_data['name'])
-                session['cart_items'] = {}
-                session['cart_total'] = 0.0
-                session.modified = True
-            else:
-                for item_id, item_data in list(session.get('cart_items', {}).items()):
-                    if (item_to_remove.lower() in item_data['name'].lower() or 
-                        (main_item and main_item.name.lower() in item_data['name'].lower())):
-                        removed_items.append(item_data['name'])
-                        session['cart_total'] = max(0, session.get('cart_total', 0.0) - (item_data['price'] * item_data['quantity']))
-                        session['cart_items'].pop(item_id)
-                        session.modified = True
-                        break
-            
-            session.pop(pending_item_key, None)
-            session.modified = True
-        
-        elif order_type == "clear_cart" or action == "clear_cart":
-            for item_id, item_data in list(session.get('cart_items', {}).items()):
-                removed_items.append(item_data['name'])
-            session['cart_items'] = {}
-            session['cart_total'] = 0.0
-            session.modified = True
-            
-            session.pop(pending_item_key, None)
-            session.modified = True
-        
+        # Check for termination or checkout
         action_response = None
-        if "checkout" in user_message.lower() or "pay" in user_message.lower() or order_type == "checkout":
+        if message_to_user.strip() == "TERMINATE_CHAT" or "checkout" in user_message.lower() or "pay" in user_message.lower():
             action_response = "checkout"
             message_to_user = "Great! Taking you to checkout now."
             
-            session.pop(pending_item_key, None)
-            session.modified = True
+        # Get items added or removed
+        items_to_add = []
+        removed_items = []
         
-        cart_items = session.get('cart_items', {})
-        updated_order = {
-            "menuItems": [],
-            "total": session.get('cart_total', 0.0)
-        }
+        # Add items based on the updated order
+        menu_items = menu.get_items()
+        id_to_item = {item.id: item for item in menu_items}
         
-        for item_id, item_data in cart_items.items():
-            updated_order["menuItems"].append({
-                "id": item_data['id'],
-                "name": item_data['name'],
-                "price": item_data['price'],
-                "quantity": item_data['quantity']
-            })
+        for item in updated_order.get("menuItems", []):
+            if item["id"] in id_to_item:
+                items_to_add.append(id_to_item[item["id"]])
         
         return jsonify({
             "response": message_to_user,
@@ -724,14 +505,14 @@ def chat():
             "items": [menu.serialize_item(item) for item in items_to_add if item],
             "removed_items": removed_items,
             "action": action_response,
-            "pendingCombo": pending_item is not None
+            "pendingCombo": False
         })
         
     except Exception as e:
         print(f"Error in chat API: {str(e)}")
         return jsonify({
             "response": "I apologize, but I encountered an error. Please try again.",
-            "order": current_order,
+            "order": load_current_order(),
             "action": None
         }), 500
 
@@ -747,33 +528,51 @@ def remove_from_cart():
                 'message': 'Item ID is required'
             }), 400
         
-        cart_items = session.get('cart_items', {})
+        # Load current order from order.json
+        current_order = load_current_order()
         
-        if item_id not in cart_items:
+        # Prepare the order structure if needed
+        if "menuItems" not in current_order:
+            current_order["menuItems"] = []
+        
+        removed_items = []
+        item_index = None
+        item_data = None
+        
+        # Find the item in the order
+        for i, item in enumerate(current_order["menuItems"]):
+            if item["id"] == item_id:
+                item_index = i
+                item_data = item
+                break
+        
+        # If item not found, return error
+        if item_index is None:
             return jsonify({
                 'success': False,
                 'message': 'Item not found in cart'
             }), 404
         
-        removed_items = []
-        
-        if decrease_only and cart_items[item_id]['quantity'] > 1:
-            cart_items[item_id]['quantity'] -= 1
+        # If decrease_only and quantity > 1, just decrease the quantity
+        if decrease_only and item_data["quantity"] > 1:
+            item_data["quantity"] -= 1
             removed_items.append({'id': item_id, 'quantity': 1})
-            session['cart_total'] -= cart_items[item_id]['price']
         else:
-            removed_quantity = cart_items[item_id]['quantity']
+            # Otherwise remove the item completely
+            removed_quantity = item_data["quantity"]
             removed_items.append({'id': item_id, 'quantity': removed_quantity})
-            session['cart_total'] -= cart_items[item_id]['price'] * removed_quantity
-            del cart_items[item_id]
+            current_order["menuItems"].pop(item_index)
         
-        session['cart_items'] = cart_items
-        session.modified = True
+        # Recalculate the total
+        current_order["total"] = sum(item["price"] * item["quantity"] for item in current_order["menuItems"])
+        
+        # Save the updated order
+        save_order(current_order, menu.get_items())
         
         return jsonify({
             'success': True,
-            'cart': cart_items,
-            'total': session['cart_total'],
+            'cart': current_order["menuItems"],
+            'total': current_order["total"],
             'removed_items': removed_items
         })
         
@@ -798,57 +597,61 @@ def get_category_items():
         'items': serialized_items
     })
 
-@app.route('/api/add_combo_to_cart', methods=['POST'])
-def add_combo_to_cart():
-    base_item_id = request.json.get('base_item_id')
-    fries_item_id = request.json.get('fries_item_id') 
-    drink_item_id = request.json.get('drink_item_id')
-    combo_price = request.json.get('combo_price')
+# New endpoint to get available sauces
+@app.route('/api/get_sauces', methods=['GET'])
+def get_sauces():
+    sauces = []
     
-    if not all([base_item_id, fries_item_id, drink_item_id, combo_price]):
-        return jsonify({"success": False, "message": "Missing required combo information"})
+    for item in menu.get_items():
+        if item.category.lower() == 'condiments' and 'sauce' in item.name.lower():
+            sauces.append({
+                'id': item.id,
+                'name': item.name,
+                'price': item.price
+            })
     
-    base_item = menu.get_item_information(base_item_id)
-    fries_item = menu.get_item_information(fries_item_id)
-    drink_item = menu.get_item_information(drink_item_id)
+    return jsonify({
+        'success': True,
+        'sauces': sorted(sauces, key=lambda x: x['name'])
+    })
+
+# New endpoint to get available drinks
+@app.route('/api/get_drinks', methods=['GET'])
+def get_drinks():
+    drinks = []
     
-    if not all([base_item, fries_item, drink_item]):
-        return jsonify({"success": False, "message": "One or more combo items not found"})
+    for item in menu.get_items():
+        if item.category.lower() == 'drinks' or item.category.lower() == 'mccafe':
+            drinks.append({
+                'id': item.id,
+                'name': item.name,
+                'price': item.price,
+                'size': item.size,
+            })
     
-    combo_id = f"COMBO-{base_item.id}-{datetime.now().timestamp()}"
+    return jsonify({
+        'success': True,
+        'drinks': sorted(drinks, key=lambda x: x['name'])
+    })
+
+# New endpoint to get available sides
+@app.route('/api/get_sides', methods=['GET'])
+def get_sides():
+    sides = []
     
-    cart_items = session.get('cart_items', {})
+    for item in menu.get_items():
+        if item.category.lower() == 'sides':
+            sides.append({
+                'id': item.id,
+                'name': item.name,
+                'price': item.price,
+                'size': item.size
+            })
     
-    combo_components = [
-        {"id": base_item.id, "name": base_item.name, "is_premium": False},
-        {"id": fries_item.id, "name": fries_item.name, "is_premium": False},
-        {"id": drink_item.id, "name": drink_item.name, "is_premium": drink_item.price > 1.99}
-    ]
-    
-    premium_info = ""
-    has_premium_drink = drink_item.price > 1.99
-    
-    if has_premium_drink:
-        premium_info = "Premium drink"
-    
-    combo_item = {
-        'id': combo_id,
-        'name': f"{base_item.name} Combo",
-        'price': float(combo_price),
-        'quantity': 1,
-        'is_combo': True,
-        'combo_items': combo_components,
-        'has_premium_drink': has_premium_drink,
-        'premium_info': premium_info
-    }
-    
-    cart_items[combo_id] = combo_item
-    session['cart_items'] = cart_items
-    
-    session['cart_total'] = session.get('cart_total', 0.0) + float(combo_price)
-    session.modified = True
-    
-    return jsonify({"success": True, "cart": cart_items, "total": session['cart_total']})
+    return jsonify({
+        'success': True,
+        'sides': sorted(sides, key=lambda x: x['name'])
+    })
 
 if __name__ == '__main__':
     app.run(debug=True)

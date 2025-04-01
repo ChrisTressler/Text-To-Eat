@@ -4,6 +4,15 @@ let currentItem = null;
 let comboBaseItem = null;
 let selectedDrink = null;
 
+// Variables for suggestion modals
+let suggestedItemType = null;
+let suggestedItemId = null;
+let currentSauces = [];
+let currentSides = [];
+let currentDrinks = [];
+let selectedSauce = null;
+let selectedSide = null;
+
 function saveCartToLocalStorage() {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
     localStorage.setItem('cartTotal', cartTotal.toString());
@@ -48,18 +57,17 @@ function openComboModal(item) {
     selectedDrink = null;
     
     // Fetch available drinks
-    fetch('/api/get_category_items', {
-        method: 'POST',
+    fetch('/api/get_drinks', {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ category: 'drinks' }),
+        }
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             // Create radio buttons for each drink
-            data.items.forEach(drink => {
+            data.drinks.forEach(drink => {
                 const drinkOption = document.createElement('div');
                 drinkOption.className = 'drink-option';
                 
@@ -99,12 +107,12 @@ function openComboModal(item) {
             });
             
             // Select the first drink by default
-            if (data.items.length > 0) {
+            if (data.drinks.length > 0) {
                 const firstRadio = document.querySelector('#drink-options input[type="radio"]');
                 if (firstRadio) {
                     firstRadio.checked = true;
                     firstRadio.dispatchEvent(new Event('change'));
-                    selectedDrink = data.items[0];
+                    selectedDrink = data.drinks[0];
                 }
             }
         } else {
@@ -265,6 +273,14 @@ function forceCartRefresh() {
                         li.appendChild(nameSpan);
                         li.appendChild(quantitySpan);
                         li.appendChild(priceSpan);
+                        
+                        // Display notes if they exist
+                        if (item.notes && item.notes.length > 0) {
+                            const notesDiv = document.createElement('div');
+                            notesDiv.className = 'item-notes';
+                            notesDiv.textContent = item.notes;
+                            li.appendChild(notesDiv);
+                        }
                         
                         ul.appendChild(li);
                     }
@@ -536,6 +552,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateCartCountBadge();
                     
                     showNotification('Item added to cart!');
+                    
+                    // Handle suggestions using the helper function
+                    handleItemSuggestion(data.suggestion, data.suggestion_type);
                 } else {
                     showNotification('Error: ' + data.message, 'error');
                 }
@@ -716,6 +735,105 @@ document.addEventListener('DOMContentLoaded', function() {
             itemName.appendChild(comboBadge);
         }
     });
+
+    // Create sauce suggestion modal if it doesn't exist
+    if (!document.getElementById('sauce-modal')) {
+        const sauceModal = document.createElement('div');
+        sauceModal.id = 'sauce-modal';
+        sauceModal.className = 'modal';
+        
+        sauceModal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times;</span>
+                    <h2>Would you like any sauce with that?</h2>
+                </div>
+                <div class="modal-body">
+                    <div id="sauce-options" class="options-list">
+                        <!-- Sauce options will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-sauce" class="btn">No Thanks</button>
+                    <button id="add-sauce" class="btn primary">Add Sauce</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(sauceModal);
+        
+        // Add event listeners
+        document.querySelector('#sauce-modal .close').addEventListener('click', function() {
+            sauceModal.style.display = 'none';
+        });
+        
+        document.getElementById('cancel-sauce').addEventListener('click', function() {
+            sauceModal.style.display = 'none';
+        });
+        
+        document.getElementById('add-sauce').addEventListener('click', function() {
+            addSelectedSauceToCart();
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === sauceModal) {
+                sauceModal.style.display = 'none';
+            }
+        });
+    }
+    
+    // Create entree suggestion modal if it doesn't exist
+    if (!document.getElementById('entree-modal')) {
+        const entreeModal = document.createElement('div');
+        entreeModal.id = 'entree-modal';
+        entreeModal.className = 'modal';
+        
+        entreeModal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times;</span>
+                    <h2>Would you like to add drinks or sides?</h2>
+                </div>
+                <div class="modal-body">
+                    <h3>Drinks</h3>
+                    <div id="drink-entree-options" class="options-list">
+                        <!-- Drink options will be populated here -->
+                    </div>
+                    <h3>Sides</h3>
+                    <div id="side-options" class="options-list">
+                        <!-- Side options will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-entree" class="btn">No Thanks</button>
+                    <button id="add-entree" class="btn primary">Add Selected Items</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(entreeModal);
+        
+        // Add event listeners
+        document.querySelector('#entree-modal .close').addEventListener('click', function() {
+            entreeModal.style.display = 'none';
+        });
+        
+        document.getElementById('cancel-entree').addEventListener('click', function() {
+            entreeModal.style.display = 'none';
+        });
+        
+        document.getElementById('add-entree').addEventListener('click', function() {
+            addSelectedSideAndDrinkToCart();
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === entreeModal) {
+                entreeModal.style.display = 'none';
+            }
+        });
+    }
 });
 
 function openCustomizeModal(item) {
@@ -1054,6 +1172,15 @@ function updateCartDisplay() {
             li.appendChild(quantitySpan);
             li.appendChild(priceSpan);
             li.appendChild(comboComponentsList);
+            
+            // Display notes if they exist
+            if (item.notes && item.notes.length > 0) {
+                const notesDiv = document.createElement('div');
+                notesDiv.className = 'item-notes';
+                notesDiv.textContent = item.notes;
+                li.appendChild(notesDiv);
+            }
+            
             li.appendChild(actionsContainer);
         } else {
             // Regular non-combo item (unchanged)
@@ -1093,6 +1220,15 @@ function updateCartDisplay() {
             li.appendChild(nameSpan);
             li.appendChild(quantitySpan);
             li.appendChild(priceSpan);
+            
+            // Display notes if they exist
+            if (item.notes && item.notes.length > 0) {
+                const notesDiv = document.createElement('div');
+                notesDiv.className = 'item-notes';
+                notesDiv.textContent = item.notes;
+                li.appendChild(notesDiv);
+            }
+            
             li.appendChild(actionsContainer);
         }
         
@@ -1204,6 +1340,16 @@ notificationStyle.textContent = `
         margin-left: 15px;
     }
     
+    .item-notes {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+        margin: 4px 0;
+        padding-left: 10px;
+        border-left: 2px solid #ffbc0d;
+        width: 100%;
+    }
+    
     .remove-item-btn, .decrease-qty-btn {
         background: none;
         border: none;
@@ -1301,4 +1447,452 @@ document.addEventListener('DOMContentLoaded', function() {
             chatMessages.appendChild(messageDiv);
         }
     }, 500);
+});
+
+// Function to open the sauce suggestion modal
+function openSauceSuggestionModal(itemId) {
+    suggestedItemType = 'sauce';
+    suggestedItemId = itemId;
+    selectedSauce = null;
+    
+    const sauceModal = document.getElementById('sauce-modal');
+    const sauceOptions = document.getElementById('sauce-options');
+    
+    // Clear previous sauce options
+    sauceOptions.innerHTML = '';
+    
+    // Fetch available sauces
+    fetch('/api/get_sauces', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentSauces = data.sauces;
+            
+            // Create radio buttons for each sauce
+            data.sauces.forEach(sauce => {
+                const sauceOption = document.createElement('div');
+                sauceOption.className = 'sauce-option';
+                
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'sauce-choice';
+                radio.id = 'sauce-' + sauce.id;
+                radio.value = sauce.id;
+                
+                radio.addEventListener('change', function() {
+                    selectedSauce = sauce;
+                });
+                
+                const label = document.createElement('label');
+                label.htmlFor = 'sauce-' + sauce.id;
+                label.textContent = sauce.name;
+                
+                // If there's a price, show it in the label
+                if (sauce.price > 0) {
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = 'price';
+                    priceSpan.textContent = ` (+$${sauce.price.toFixed(2)})`;
+                    label.appendChild(priceSpan);
+                }
+                
+                sauceOption.appendChild(radio);
+                sauceOption.appendChild(label);
+                sauceOptions.appendChild(sauceOption);
+            });
+            
+            // Add "No sauce" option
+            const noSauceOption = document.createElement('div');
+            noSauceOption.className = 'sauce-option';
+            
+            const noSauceRadio = document.createElement('input');
+            noSauceRadio.type = 'radio';
+            noSauceRadio.name = 'sauce-choice';
+            noSauceRadio.id = 'sauce-none';
+            noSauceRadio.value = 'none';
+            noSauceRadio.checked = true; // Default selection
+            
+            noSauceRadio.addEventListener('change', function() {
+                selectedSauce = null;
+            });
+            
+            const noSauceLabel = document.createElement('label');
+            noSauceLabel.htmlFor = 'sauce-none';
+            noSauceLabel.textContent = 'No sauce, thanks';
+            
+            noSauceOption.appendChild(noSauceRadio);
+            noSauceOption.appendChild(noSauceLabel);
+            sauceOptions.appendChild(noSauceOption);
+            
+            // Show the modal
+            sauceModal.style.display = 'block';
+        } else {
+            showNotification('Error loading sauces', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching sauces:', error);
+        showNotification('Error fetching sauces', 'error');
+    });
+}
+
+// Function to add selected sauce to cart
+function addSelectedSauceToCart() {
+    const sauceModal = document.getElementById('sauce-modal');
+    
+    if (selectedSauce) {
+        fetch('/api/add_to_cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ item_id: selectedSauce.id }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cartItems = data.cart;
+                cartTotal = data.total;
+                
+                saveCartToLocalStorage();
+                updateCartCountBadge();
+                
+                showNotification(`Added ${selectedSauce.name} to your order!`);
+            }
+        })
+        .catch(error => {
+            console.error('Error adding sauce to cart:', error);
+        });
+    }
+    
+    sauceModal.style.display = 'none';
+}
+
+// Function to open the entree suggestion modal (sides only)
+function openEntreeSuggestionModal(itemId) {
+    suggestedItemType = 'entree';
+    suggestedItemId = itemId;
+    selectedSide = null;
+    
+    const entreeModal = document.getElementById('entree-modal');
+    const sideOptions = document.getElementById('side-options');
+    const drinkOptions = document.getElementById('drink-entree-options');
+    
+    // Clear previous side options
+    sideOptions.innerHTML = '';
+    drinkOptions.innerHTML = '';
+    
+    // Debug message to help troubleshoot
+    console.log('Opening entree suggestion modal, cleared side container');
+    
+    // Fetch sides data
+    console.log('Fetching sides data...');
+    fetch('/api/get_sides', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentSides = data.sides;
+            console.log('Received sides data:', data.sides);
+            
+            const sideOptionsContainer = document.getElementById('side-options');
+            if (!sideOptionsContainer) {
+                console.error('Could not find side-options container');
+                return;
+            }
+            
+            // Clear just to be safe
+            sideOptionsContainer.innerHTML = '';
+            
+            // Create radio buttons for each side
+            data.sides.forEach(side => {
+                const sideOption = document.createElement('div');
+                sideOption.className = 'side-option';
+                
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'side-choice';
+                radio.id = 'side-' + side.id;
+                radio.value = side.id;
+                
+                radio.addEventListener('change', function() {
+                    selectedSide = side;
+                });
+                
+                const label = document.createElement('label');
+                label.htmlFor = 'side-' + side.id;
+                label.textContent = side.name;
+                
+                const priceSpan = document.createElement('span');
+                priceSpan.className = 'price';
+                priceSpan.textContent = ` ($${side.price.toFixed(2)})`;
+                label.appendChild(priceSpan);
+                
+                sideOption.appendChild(radio);
+                sideOption.appendChild(label);
+                sideOptionsContainer.appendChild(sideOption);
+            });
+            
+            // Add "No side" option
+            const noSideOption = document.createElement('div');
+            noSideOption.className = 'side-option';
+            
+            const noSideRadio = document.createElement('input');
+            noSideRadio.type = 'radio';
+            noSideRadio.name = 'side-choice';
+            noSideRadio.id = 'side-none';
+            noSideRadio.value = 'none';
+            noSideRadio.checked = true; // Default selection
+            
+            noSideRadio.addEventListener('change', function() {
+                selectedSide = null;
+            });
+            
+            const noSideLabel = document.createElement('label');
+            noSideLabel.htmlFor = 'side-none';
+            noSideLabel.textContent = 'No side, thanks';
+            
+            noSideOption.appendChild(noSideRadio);
+            noSideOption.appendChild(noSideLabel);
+            sideOptionsContainer.appendChild(noSideOption);
+            
+            // Show the modal
+            entreeModal.style.display = 'block';
+            console.log('Entree modal is now displayed with sides only');
+        } else {
+            showNotification('Error loading sides', 'error');
+            throw new Error('Failed to load sides');
+        }
+
+
+
+        
+    })
+    .catch(error => {
+        console.error('Error fetching sides:', error);
+        showNotification('Error fetching suggestions', 'error');
+    });
+
+
+
+    fetch('/api/get_drinks', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentdrinks = data.drinks;
+            console.log('Received drinks data:', data.drinks);
+            
+            const drinkOptionsContainer = document.getElementById('drink-entree-options');
+            if (!drinkOptionsContainer) {
+                console.error('Could not find drink-options container');
+                return;
+            }
+            
+            // Clear just to be safe
+            drinkOptionsContainer.innerHTML = '';
+            
+            // Create radio buttons for each drink
+            data.drinks.forEach(drink => {
+                const drinkOption = document.createElement('div');
+                drinkOption.className = 'drink-option';
+                
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'drink-choice';
+                radio.id = 'drink-' + drink.id;
+                radio.value = drink.id;
+                
+                radio.addEventListener('change', function() {
+                    selecteddrink = drink;
+                });
+                
+                const label = document.createElement('label');
+                label.htmlFor = 'drink-' + drink.id;
+                label.textContent = drink.name;
+                
+                const priceSpan = document.createElement('span');
+                priceSpan.className = 'price';
+                priceSpan.textContent = ` ($${drink.price.toFixed(2)})`;
+                label.appendChild(priceSpan);
+                
+                drinkOption.appendChild(radio);
+                drinkOption.appendChild(label);
+                drinkOptionsContainer.appendChild(drinkOption);
+            });
+            
+            // Add "No drink" option
+            const nodrinkOption = document.createElement('div');
+            nodrinkOption.className = 'drink-option';
+            
+            const nodrinkRadio = document.createElement('input');
+            nodrinkRadio.type = 'radio';
+            nodrinkRadio.name = 'drink-choice';
+            nodrinkRadio.id = 'drink-none';
+            nodrinkRadio.value = 'none';
+            nodrinkRadio.checked = true; // Default selection
+            
+            nodrinkRadio.addEventListener('change', function() {
+                selecteddrink = null;
+            });
+            
+            const nodrinkLabel = document.createElement('label');
+            nodrinkLabel.htmlFor = 'drink-none';
+            nodrinkLabel.textContent = 'No drink, thanks';
+            
+            nodrinkOption.appendChild(nodrinkRadio);
+            nodrinkOption.appendChild(nodrinkLabel);
+            drinkOptionsContainer.appendChild(nodrinkOption);
+            
+            // Show the modal
+            entreeModal.style.display = 'block';
+            console.log('Entree modal is now displayed with drinks only');
+        } else {
+            showNotification('Error loading drinks', 'error');
+            throw new Error('Failed to load drinks');
+        }
+
+
+
+        
+    })
+    .catch(error => {
+        console.error('Error fetching sides:', error);
+        showNotification('Error fetching suggestions', 'error');
+    });
+}
+
+
+// Add a helper function to handle suggestion routing
+function handleItemSuggestion(suggestion, suggestionType) {
+    if (!suggestion || !suggestionType) {
+        return;
+    }
+    
+    console.log("Handling suggestion type:", suggestionType);
+    
+    if (suggestionType === 'sauce') {
+        openSauceSuggestionModal(suggestion.item_id);
+    } else if (suggestionType === 'entree') {
+        openEntreeSuggestionModal(suggestion.item_id);
+    }
+}
+
+// Function to add selected side and drink to cart
+function addSelectedSideAndDrinkToCart() {
+    const entreeModal = document.getElementById('entree-modal');
+    const addPromises = [];
+    
+    if (selectedSide) {
+        addPromises.push(
+            fetch('/api/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ item_id: selectedSide.id }),
+            })
+        );
+    }
+    
+    if (selectedDrink) {
+        addPromises.push(
+            fetch('/api/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ item_id: selectedDrink.id }),
+            })
+        );
+    }
+    
+    if (addPromises.length > 0) {
+        Promise.all(addPromises)
+            .then(responses => Promise.all(responses.map(res => res.json())))
+            .then(results => {
+                // Use the last result for cart update
+                const lastResult = results[results.length - 1];
+                if (lastResult.success) {
+                    cartItems = lastResult.cart;
+                    cartTotal = lastResult.total;
+                    
+                    saveCartToLocalStorage();
+                    updateCartCountBadge();
+                    
+                    let message = '';
+                    if (selectedSide && selectedDrink) {
+                        message = `Added ${selectedSide.name} and ${selectedDrink.name} to your order!`;
+                    } else if (selectedSide) {
+                        message = `Added ${selectedSide.name} to your order!`;
+                    } else if (selectedDrink) {
+                        message = `Added ${selectedDrink.name} to your order!`;
+                    }
+                    
+                    if (message) {
+                        showNotification(message);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error adding items to cart:', error);
+                showNotification('Error adding items to cart', 'error');
+            });
+    }
+    
+    entreeModal.style.display = 'none';
+}
+
+// Add styles for the new modals
+const suggestionModalStyle = document.createElement('style');
+suggestionModalStyle.textContent = `
+    .options-list {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+    }
+    
+    .sauce-option, .side-option, .drink-option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+    
+    .sauce-option:hover, .side-option:hover, .drink-option:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .sauce-option input, .side-option input, .drink-option input {
+        margin-right: 10px;
+    }
+    
+    .sauce-option label, .side-option label, .drink-option label {
+        flex: 1;
+        cursor: pointer;
+    }
+    
+    .sauce-option .price, .side-option .price, .drink-option .price {
+        color: #666;
+        font-size: 0.9em;
+    }
+`;
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.head.appendChild(suggestionModalStyle);
+    // ... existing code ...
 });
