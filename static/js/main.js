@@ -40,8 +40,17 @@ function openComboModal(item) {
     const drinkOptions = document.getElementById('drink-options');
     const comboModal = document.getElementById('combo-modal');
     
-    // Set item details
-    comboBaseItemName.textContent = item.name;
+    // Set item details - handle size variants
+    let itemName = item.name;
+    if (item.is_size_variant && item.available_sizes) {
+        // If it's a size variant, include size in the name
+        const currentSize = item.available_sizes.find(s => s.id === item.id);
+        if (currentSize) {
+            itemName = `${item.name} (${currentSize.size_name})`;
+        }
+    }
+    
+    comboBaseItemName.textContent = itemName;
     comboBasePrice.textContent = item.price.toFixed(2);
     
     // Define the base combo upcharge and standard drink price
@@ -406,6 +415,26 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchCartState();
     updateCartCountBadge();
 
+    // Handle size selection dropdown changes
+    document.addEventListener('change', function(event) {
+        if (event.target.classList.contains('size-select')) {
+            const menuItem = event.target.closest('.menu-item');
+            const sizeSelect = event.target;
+            const priceDisplay = menuItem.querySelector('.price');
+            
+            // Update the price based on the selected size option
+            const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+            const price = selectedOption.dataset.price;
+            
+            if (price && priceDisplay) {
+                priceDisplay.textContent = '$' + parseFloat(price).toFixed(2);
+            }
+            
+            // Update the data-id attribute of the menu item to the selected size's ID
+            menuItem.dataset.id = sizeSelect.value;
+        }
+    });
+
     if (cartBtn) {
         const originalClickHandler = cartBtn.onclick;
         cartBtn.onclick = function(event) {
@@ -449,11 +478,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            document.querySelectorAll('#free-add-ons input[type="checkbox"], #paid-add-ons input[type="checkbox"]').forEach(checkbox => {
+            document.querySelectorAll('#add-ons input[type="checkbox"]').forEach(checkbox => {
                 if (checkbox.checked) {
                     addedIngredients.push(checkbox.value);
                 }
             });
+            
+            console.log("Added ingredients:", addedIngredients);
             
             addToCartWithCustomization(currentItem.id, removedIngredients, addedIngredients);
             
@@ -490,7 +521,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('combo-btn')) {
             const menuItem = event.target.closest('.menu-item');
-            const itemId = menuItem.dataset.id;
+            let itemId = menuItem.dataset.id;
+            
+            // Check if this is a multi-size item with a size selector
+            const sizeSelect = menuItem.querySelector('.size-select');
+            if (sizeSelect) {
+                itemId = sizeSelect.value;
+            }
             
             fetch('/api/get_item_details', {
                 method: 'POST',
@@ -532,7 +569,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('add-to-cart-btn')) {
             const menuItem = event.target.closest('.menu-item');
-            const itemId = menuItem.dataset.id;
+            let itemId = menuItem.dataset.id;
+            
+            // Check if this is a multi-size item with a size selector
+            const sizeSelect = menuItem.querySelector('.size-select');
+            if (sizeSelect) {
+                itemId = sizeSelect.value;
+            }
             
             fetch('/api/add_to_cart', {
                 method: 'POST',
@@ -567,7 +610,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (event.target.classList.contains('customize-btn')) {
             const menuItem = event.target.closest('.menu-item');
-            const itemId = menuItem.dataset.id;
+            let itemId = menuItem.dataset.id;
+            
+            // Check if this is a multi-size item with a size selector
+            const sizeSelect = menuItem.querySelector('.size-select');
+            if (sizeSelect) {
+                itemId = sizeSelect.value;
+            }
             
             fetch('/api/get_item_details', {
                 method: 'POST',
@@ -840,178 +889,183 @@ function openCustomizeModal(item) {
     currentItem = item;
     
     const customizeItemName = document.getElementById('customize-item-name');
+    const customizeBasePrice = document.getElementById('customize-base-price');
+    const customizeTotalPrice = document.getElementById('customize-total-price');
     const currentIngredientsContainer = document.getElementById('current-ingredients');
     const addOnsContainer = document.getElementById('add-ons');
-    const customizeBasePrice = document.getElementById('customize-base-price');
-    const customizeExtrasPrice = document.getElementById('customize-extras-price');
-    const customizeTotalPrice = document.getElementById('customize-total-price');
-    const customizeModal = document.getElementById('customize-modal');
     
-    if (!addOnsContainer) {
-        // If the add-ons container doesn't exist yet, create it in the correct place
-        const ingredientControls = document.querySelector('#customize-modal .ingredient-controls');
-        if (ingredientControls) {
-            const addOnsHeader = document.createElement('h4');
-            addOnsHeader.textContent = 'Add-Ons';
-            ingredientControls.appendChild(addOnsHeader);
-            
-            const newAddOnsContainer = document.createElement('div');
-            newAddOnsContainer.id = 'add-ons';
-            newAddOnsContainer.className = 'ingredients-list';
-            ingredientControls.appendChild(newAddOnsContainer);
-        }
-    }
+    // Set item name and price
+    let displayName = item.name;
     
-    customizeItemName.textContent = item.name;
+    customizeItemName.textContent = displayName;
     customizeBasePrice.textContent = item.price.toFixed(2);
-    customizeExtrasPrice.textContent = '0.00';
     customizeTotalPrice.textContent = item.price.toFixed(2);
     
-    // Clear containers 
+    // Clear existing containers
     currentIngredientsContainer.innerHTML = '';
+    addOnsContainer.innerHTML = '';
     
-    const updatedAddOnsContainer = document.getElementById('add-ons');
-    if (updatedAddOnsContainer) {
-        updatedAddOnsContainer.innerHTML = '';
-    } else {
-        console.error('Could not find or create add-ons container');
-        return;
+    // If this is a size variant item, add a size selector
+    if (item.is_size_variant && item.available_sizes && item.available_sizes.length > 1) {
+        const sizeOptionsDiv = document.createElement('div');
+        sizeOptionsDiv.className = 'size-options-customize';
+        
+        const sizeLabel = document.createElement('label');
+        sizeLabel.textContent = isPieceCountItem(item.id) ? 'Piece Count:' : 'Size:';
+        sizeOptionsDiv.appendChild(sizeLabel);
+        
+        const sizeSelect = document.createElement('select');
+        sizeSelect.className = 'size-select';
+        
+        item.available_sizes.forEach(size => {
+            const option = document.createElement('option');
+            option.value = size.id;
+            option.textContent = `${size.size_name} ($${size.price.toFixed(2)})`;
+            option.dataset.price = size.price;
+            
+            // Select the current size
+            if (size.id === item.id) {
+                option.selected = true;
+            }
+            
+            sizeSelect.appendChild(option);
+        });
+        
+        // Add event listener to update prices when size changes
+        sizeSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const newPrice = selectedOption.dataset.price;
+            
+            if (newPrice) {
+                // Update the price displays
+                customizeBasePrice.textContent = parseFloat(newPrice).toFixed(2);
+                
+                // Recalculate total with add-ons
+                const extrasPrice = parseFloat(document.getElementById('customize-extras-price').textContent);
+                customizeTotalPrice.textContent = (parseFloat(newPrice) + extrasPrice).toFixed(2);
+                
+                // Update the current item's price and ID
+                currentItem.price = parseFloat(newPrice);
+                currentItem.id = selectedOption.value;
+            }
+        });
+        
+        sizeOptionsDiv.appendChild(sizeSelect);
+        currentIngredientsContainer.appendChild(sizeOptionsDiv);
     }
     
     // Populate current ingredients
     if (item.ingredients && item.ingredients.length > 0) {
         item.ingredients.forEach(ing => {
-            const ingredientDiv = document.createElement('div');
-            ingredientDiv.className = 'ingredient-item';
+            const ingredientItem = document.createElement('div');
+            ingredientItem.className = 'ingredient-item';
             
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
-            checkbox.id = 'ing-' + ing.id;
-            checkbox.value = ing.id;
             checkbox.checked = true;
+            checkbox.value = ing.id;
+            checkbox.id = 'ing-' + ing.id;
             
             const label = document.createElement('label');
             label.htmlFor = 'ing-' + ing.id;
             label.textContent = ing.name;
             
-            ingredientDiv.appendChild(checkbox);
-            ingredientDiv.appendChild(label);
+            if (ing.price > 0) {
+                const priceSpan = document.createElement('span');
+                priceSpan.className = 'price';
+                priceSpan.textContent = ' ($' + ing.price.toFixed(2) + ')';
+                priceSpan.dataset.price = ing.price;
+                label.appendChild(priceSpan);
+            }
             
-            currentIngredientsContainer.appendChild(ingredientDiv);
+            ingredientItem.appendChild(checkbox);
+            ingredientItem.appendChild(label);
+            currentIngredientsContainer.appendChild(ingredientItem);
         });
     } else {
-        currentIngredientsContainer.innerHTML = '<p>No ingredients to customize</p>';
+        const noIngredientsMsg = document.createElement('p');
+        noIngredientsMsg.textContent = 'No customizable ingredients available.';
+        currentIngredientsContainer.appendChild(noIngredientsMsg);
     }
     
-    const allAddOns = [];
-    
-    // Add Extra versions of current ingredients
-    if (item.ingredients && item.ingredients.length > 0) {
-        item.ingredients.forEach(ing => {
-            allAddOns.push({
-                id: 'extra-' + ing.id,
-                value: ing.id,
-                name: 'Extra ' + ing.name,
-                price: ing.price,
-                isPaid: true
-            });
-        });
-    }
-    
-    // Add paid add-ons
-    if (item.paidAddOns && item.paidAddOns.length > 0) {
-        item.paidAddOns.forEach(ing => {
-            allAddOns.push({
-                id: 'paid-' + ing.id,
-                value: ing.id,
-                name: ing.name,
-                price: ing.price,
-                isPaid: true
-            });
-        });
-    }
-    
-    // Add free add-ons
-    if (item.freeAddOns && item.freeAddOns.length > 0) {
-        item.freeAddOns.forEach(ing => {
-            allAddOns.push({
-                id: 'free-' + ing.id,
-                value: ing.id,
-                name: ing.name,
-                price: 0,
-                isPaid: false
-            });
-        });
-    }
-    
-    // Sort alphabetically but keep free items at the bottom
-    allAddOns.sort((a, b) => {
-        // If one is paid and the other is free, paid comes first
-        if (a.isPaid && !b.isPaid) return -1;
-        if (!a.isPaid && b.isPaid) return 1;
+    // Populate available add-ons
+    if (item.available_extras && item.available_extras.length > 0) {
+        // Group add-ons by price (free vs. paid)
+        const freeAddOns = [];
+        const paidAddOns = [];
         
-        // If both are the same type, sort alphabetically
-        return a.name.localeCompare(b.name);
-    });
-    
-    // Add all add-ons to the container
-    allAddOns.forEach(addon => {
-        const ingredientDiv = document.createElement('div');
-        ingredientDiv.className = 'ingredient-item';
+        item.available_extras.forEach(extra => {
+            if (extra.price <= 0) {
+                freeAddOns.push(extra);
+            } else {
+                paidAddOns.push(extra);
+            }
+        });
         
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = addon.id;
-        checkbox.value = addon.value;
-        checkbox.checked = false;
-        if (addon.isPaid) {
-            checkbox.addEventListener('change', updateCustomizationPrice);
+        // Add free add-ons with a header
+        if (freeAddOns.length > 0) {
+            const freeHeader = document.createElement('div');
+            freeHeader.className = 'add-on-group-header';
+            freeHeader.textContent = 'Free Add-Ons';
+            addOnsContainer.appendChild(freeHeader);
+            
+            freeAddOns.forEach(addOn => {
+                addAddOnToContainer(addOn, addOnsContainer, true);
+            });
+            
+            // Add a divider if there are also paid add-ons
+            if (paidAddOns.length > 0) {
+                const divider = document.createElement('hr');
+                addOnsContainer.appendChild(divider);
+            }
         }
         
-        const label = document.createElement('label');
-        label.htmlFor = addon.id;
-        label.textContent = addon.name;
-        
-        const price = document.createElement('span');
-        price.className = addon.isPaid ? 'price' : 'price free';
-        price.textContent = addon.isPaid ? ` (+$${addon.price.toFixed(2)})` : ' (Free)';
-        price.dataset.price = addon.price;
-        
-        label.appendChild(price);
-        ingredientDiv.appendChild(checkbox);
-        ingredientDiv.appendChild(label);
-        updatedAddOnsContainer.appendChild(ingredientDiv);
-    });
-    
-    // Make sure add button picks up add-ons from the unified section
-    const addCustomizedBtn = document.getElementById('add-customized');
-    if (addCustomizedBtn) {
-        addCustomizedBtn.onclick = function() {
-            if (!currentItem) return;
+        // Add paid add-ons with a header
+        if (paidAddOns.length > 0) {
+            const paidHeader = document.createElement('div');
+            paidHeader.className = 'add-on-group-header';
+            paidHeader.textContent = 'Premium Add-Ons';
+            addOnsContainer.appendChild(paidHeader);
             
-            const removedIngredients = [];
-            const addedIngredients = [];
-            
-            document.querySelectorAll('#current-ingredients input[type="checkbox"]').forEach(checkbox => {
-                if (!checkbox.checked) {
-                    removedIngredients.push(checkbox.value);
-                }
+            paidAddOns.forEach(addOn => {
+                addAddOnToContainer(addOn, addOnsContainer, false);
             });
-            
-            document.querySelectorAll('#add-ons input[type="checkbox"]').forEach(checkbox => {
-                if (checkbox.checked) {
-                    addedIngredients.push(checkbox.value);
-                }
-            });
-            
-            addToCartWithCustomization(currentItem.id, removedIngredients, addedIngredients);
-            
-            customizeModal.style.display = 'none';
-        };
+        }
+    } else {
+        const noAddOnsMsg = document.createElement('p');
+        noAddOnsMsg.textContent = 'No add-ons available for this item.';
+        addOnsContainer.appendChild(noAddOnsMsg);
     }
     
     // Show the modal
-    customizeModal.style.display = 'block';
+    document.getElementById('customize-modal').style.display = 'block';
+}
+
+function addAddOnToContainer(addOn, container, isFree) {
+    const addOnItem = document.createElement('div');
+    addOnItem.className = 'ingredient-item';
+    
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = false;
+    checkbox.value = addOn.id;
+    checkbox.id = 'addon-' + addOn.id;
+    
+    checkbox.addEventListener('change', updateCustomizationPrice);
+    
+    const label = document.createElement('label');
+    label.htmlFor = 'addon-' + addOn.id;
+    label.textContent = addOn.name;
+    
+    const priceSpan = document.createElement('span');
+    priceSpan.className = isFree ? 'price free' : 'price';
+    priceSpan.textContent = isFree ? ' (Free)' : ' ($' + addOn.price.toFixed(2) + ')';
+    priceSpan.dataset.price = addOn.price;
+    label.appendChild(priceSpan);
+    
+    addOnItem.appendChild(checkbox);
+    addOnItem.appendChild(label);
+    container.appendChild(addOnItem);
 }
 
 function updateCustomizationPrice() {
@@ -1060,8 +1114,12 @@ function addToCartWithCustomization(itemId, removedIngredients, addedIngredients
             
             saveCartToLocalStorage();
             updateCartCountBadge();
+            updateCartDisplay();
             
             showNotification('Customized item added to cart!');
+            
+            // Handle suggestions using the helper function
+            handleItemSuggestion(data.suggestion, data.suggestion_type);
         } else {
             showNotification('Error: ' + data.message, 'error');
         }
@@ -1308,7 +1366,7 @@ const notificationStyle = document.createElement('style');
 notificationStyle.textContent = `
     .notification {
         position: fixed;
-        top: 20px;
+        top: 70px;
         right: 20px;
         padding: 10px 15px;
         border-radius: 4px;
@@ -1671,17 +1729,11 @@ function openEntreeSuggestionModal(itemId) {
             showNotification('Error loading sides', 'error');
             throw new Error('Failed to load sides');
         }
-
-
-
-        
     })
     .catch(error => {
         console.error('Error fetching sides:', error);
         showNotification('Error fetching suggestions', 'error');
     });
-
-
 
     fetch('/api/get_drinks', {
         method: 'GET',
@@ -1763,17 +1815,12 @@ function openEntreeSuggestionModal(itemId) {
             showNotification('Error loading drinks', 'error');
             throw new Error('Failed to load drinks');
         }
-
-
-
-        
     })
     .catch(error => {
         console.error('Error fetching sides:', error);
         showNotification('Error fetching suggestions', 'error');
     });
 }
-
 
 // Add a helper function to handle suggestion routing
 function handleItemSuggestion(suggestion, suggestionType) {
@@ -1896,3 +1943,20 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(suggestionModalStyle);
     // ... existing code ...
 });
+
+// Add a helper function to determine if an item is a piece count item
+function isPieceCountItem(itemId) {
+    // Check if this is a nugget or mozzarella stick item
+    return itemId && (itemId.includes('NUG') || itemId.includes('SIDE006'));
+}
+
+// Add a helper function to format size name for display
+function formatSizeName(itemId, sizeName) {
+    if (isPieceCountItem(itemId)) {
+        // For piece count items, just return the size name (which should be like "4 pc", "6 pc", etc.)
+        return sizeName;
+    } else {
+        // For regular size items, return the standard format
+        return sizeName;
+    }
+}

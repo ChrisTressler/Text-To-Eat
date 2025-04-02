@@ -44,13 +44,25 @@
                                         <div class="item-details">
                                             <h4>{{ item.name }}</h4>
                                             <p class="item-description">{{ item.description }}</p>
-                                            <p class="price">${{ item.price }}</p>
+                                            {% if item.has_multiple_sizes %}
+                                            <div class="size-options">
+                                                <label for="size-select-{{ item.id }}">Size:</label>
+                                                <select id="size-select-{{ item.id }}" class="size-select" data-base-id="{{ item.id }}">
+                                                    {% for size in item.sizes %}
+                                                    <option value="{{ size.id }}" data-price="{{ size.price }}">
+                                                        {{ size.size_name }} (${{ size.price }})
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <p class="price">${{ item.base_price }}</p>
+                                            {% else %}
+                                            <p class="price">${{ item.base_price }}</p>
+                                            {% endif %}
                                         </div>
                                         
                                         <div class="item-actions">
-                                            {% if item.ingredients|length > 0 %}
                                             <button class="customize-btn">Customize</button>
-                                            {% endif %}
                                             
                                             {% if item.combo %}
                                             <button class="combo-btn">Order as Combo (+$2.99)</button>

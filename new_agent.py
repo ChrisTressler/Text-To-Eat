@@ -164,6 +164,7 @@ def process_order_request(user_message, menu_items, current_order=None):
     * For items with multiple sizes, ask them to clarify. By default and if the user does not clarify, return medium.
     - Be proactive in getting complete order details
     - If a customer orders an entree, ask if they would like a side and drink with it
+    - Never mention item ids in your messages to users.
     
     If the user says 'exit', 'quit', 'bye', 'checkout', or 'goodbye', respond with 'TERMINATE_CHAT'.
     If the user wants to order food, help them place their order and be friendly.

@@ -959,3 +959,67 @@ header {
     border-bottom: 1px solid #eee;
     padding-bottom: 8px;
 }
+
+.size-options {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.size-options label {
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.size-select {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex-grow: 1;
+    transition: border 0.3s;
+}
+
+.size-select:hover, .size-select:focus {
+    border-color: #ffbc0d;
+    outline: none;
+}
+
+.size-select option {
+    padding: 4px;
+}
+
+.size-options-customize {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+
+.size-options-customize label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.size-options-customize .size-select {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.size-options-customize .size-select:focus {
+    border-color: #ffbc0d;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 188, 13, 0.2);
+}
