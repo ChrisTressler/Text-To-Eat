@@ -79,12 +79,25 @@ class CustomMenu(Menu):
         
         for potential_extra in self.get_items():
             if potential_extra.category in extra_categories:
+                # Special case for cheese - always include it as an option
+                if potential_extra.id == "TOPPING004":  # Cheese ID
+                    extras.append({
+                        'id': potential_extra.id,
+                        'name': "Extra " + potential_extra.name,
+                        'price': potential_extra.price
+                    })
+                    continue
+                
+                # Normal logic for other toppings
+                
                 is_already_ingredient = False
+                """
                 if hasattr(item, 'ingredients'):
                     for ing in item.ingredients:
                         if potential_extra.id == ing.id:
                             is_already_ingredient = True
                             break
+                            """
                 
                 if not is_already_ingredient:
                     extras.append({
@@ -274,12 +287,88 @@ def menu_page():
     excluded_categories = ['ingredients', 'toppings', 'condiments']
     
     menu_items = menu.get_items()
-    display_items = [item for item in menu_items if item.category not in excluded_categories]
+    
+    # Group items with the same base ID
+    grouped_items = {}
+    
+    for item in menu_items:
+        if item.category in excluded_categories:
+            continue
+            
+        # Extract base ID (everything before the dash if it exists)
+        base_id = item.id.split('-')[0] if '-' in item.id else item.id
+        
+        # Create or get the group for this base ID
+        if base_id not in grouped_items:
+            # Initialize with the first item found with this base ID
+            grouped_items[base_id] = {
+                'id': base_id,
+                'name': item.name.split(' (')[0] if ' (' in item.name else item.name,  # Remove size from name
+                'description': item.description,
+                'category': item.category,
+                'combo': item.combo,
+                'sizes': [],
+                'has_multiple_sizes': False,
+                'base_price': item.price  # Default to the first found item's price
+            }
+        
+        # Add this item as a size option
+        if '-' in item.id:
+            size_code = item.id.split('-')[1]
+            size_name = item.size
+            
+            # Map size codes to full names if needed
+            # Check if this is a piece-count item like McNuggets or Mozzarella Sticks
+            is_piece_count_item = 'NUG' in base_id or 'SIDE006' in base_id  # McNuggets or Mozzarella Sticks
+            
+            if is_piece_count_item:
+                # Extract piece count from the name
+                pc_count = ""
+                if "(" in item.name and ")" in item.name:
+                    pc_info = item.name.split("(")[1].split(")")[0]
+                    if "pc" in pc_info.lower():
+                        pc_count = pc_info
+                    else:
+                        pc_count = size_name.capitalize()
+                else:
+                    pc_count = size_name.capitalize()
+                size_display = pc_count
+            else:
+                size_display = {
+                    's': 'Small', 
+                    'm': 'Medium', 
+                    'l': 'Large',
+                    'xl': 'Extra Large'
+                }.get(size_code, size_name)
+            
+            grouped_items[base_id]['sizes'].append({
+                'id': item.id,
+                'size_code': size_code,
+                'size_name': size_display,
+                'price': item.price,
+                'name': item.name
+            })
+            grouped_items[base_id]['has_multiple_sizes'] = True
+    
+    # Sort sizes within each group (s, m, l, xl)
+    size_order = {'s': 0, 'm': 1, 'l': 2, 'xl': 3}
+    for item in grouped_items.values():
+        if item['sizes']:
+            item['sizes'].sort(key=lambda x: size_order.get(x['size_code'], 99))
+            # Set the default price to the medium size if available, otherwise the first size
+            medium_size = next((s for s in item['sizes'] if s['size_code'] == 'm'), None)
+            if medium_size:
+                item['base_price'] = medium_size['price']
+            elif item['sizes']:
+                item['base_price'] = item['sizes'][0]['price']
+    
+    # Convert dictionary to list for the template
+    display_items = list(grouped_items.values())
     
     categories = []
     for item in display_items:
-        if item.category not in categories and item.category not in excluded_categories:
-            categories.append(item.category)
+        if item['category'] not in categories and item['category'] not in excluded_categories:
+            categories.append(item['category'])
     
     category_order = ['burgers', 'sides', 'drinks', 'desserts', 'breakfast']
     categories.sort(key=lambda x: category_order.index(x) if x in category_order else 999)
@@ -399,11 +488,61 @@ def get_cart():
 def get_item_details():
     item_id = request.json.get('item_id')
     
+    # Check if this is a size-specific ID (contains a dash)
+    base_id = item_id.split('-')[0] if '-' in item_id else item_id
+    size_code = item_id.split('-')[1] if '-' in item_id else None
+    
     item = menu.get_item_information(item_id)
     if not item:
         return jsonify({"success": False, "message": "Item not found"})
     
     serialized_item = menu.serialize_item(item)
+    
+    # If this is a size variation, also include information about other sizes
+    if size_code:
+        sizes = []
+        # Look for other size variations of this item
+        for menu_item in menu.get_items():
+            if '-' in menu_item.id and menu_item.id.split('-')[0] == base_id:
+                item_size_code = menu_item.id.split('-')[1]
+                
+                # Check if this is a piece-count item
+                is_piece_count_item = 'NUG' in base_id or 'SIDE006' in base_id  # McNuggets or Mozzarella Sticks
+                
+                if is_piece_count_item:
+                    # Extract piece count from the name
+                    pc_count = ""
+                    if "(" in menu_item.name and ")" in menu_item.name:
+                        pc_info = menu_item.name.split("(")[1].split(")")[0]
+                        if "pc" in pc_info.lower():
+                            pc_count = pc_info
+                        else:
+                            pc_count = menu_item.size.capitalize()
+                    else:
+                        pc_count = menu_item.size.capitalize()
+                    size_display = pc_count
+                else:
+                    size_display = {
+                        's': 'Small', 
+                        'm': 'Medium', 
+                        'l': 'Large',
+                        'xl': 'Extra Large'
+                    }.get(item_size_code, menu_item.size)
+                
+                sizes.append({
+                    'id': menu_item.id,
+                    'size_code': item_size_code,
+                    'size_name': size_display,
+                    'price': menu_item.price
+                })
+        
+        # Sort sizes
+        size_order = {'s': 0, 'm': 1, 'l': 2, 'xl': 3}
+        sizes.sort(key=lambda x: size_order.get(x['size_code'], 99))
+        
+        serialized_item['available_sizes'] = sizes
+        serialized_item['is_size_variant'] = True
+        serialized_item['base_id'] = base_id
     
     return jsonify({"success": True, "item": serialized_item})
 
@@ -428,6 +567,36 @@ def add_customized_item():
     
     # Create the customized item entry
     customization_notes = []
+    
+    # Add size information if this is a size variation
+    if '-' in item_id:
+        base_id = item_id.split('-')[0]
+        size_code = item_id.split('-')[1]
+        
+        # Check if this is a piece-count item
+        is_piece_count_item = 'NUG' in base_id or 'SIDE006' in base_id  # McNuggets or Mozzarella Sticks
+        
+        if is_piece_count_item:
+            # Extract piece count from the name
+            pc_count = ""
+            if "(" in base_item.name and ")" in base_item.name:
+                pc_info = base_item.name.split("(")[1].split(")")[0]
+                if "pc" in pc_info.lower():
+                    pc_count = pc_info
+                else:
+                    pc_count = base_item.size.capitalize()
+            else:
+                pc_count = base_item.size.capitalize()
+            customization_notes.append(f"Size: {pc_count}")
+        else:
+            size_display = {
+                's': 'Small', 
+                'm': 'Medium', 
+                'l': 'Large',
+                'xl': 'Extra Large'
+            }.get(size_code, base_item.size)
+            customization_notes.append(f"Size: {size_display}")
+    
     if removed_ingredients:
         removed_names = []
         for ing_id in removed_ingredients:
@@ -450,7 +619,7 @@ def add_customized_item():
     
     # Add the item to the order
     current_order["menuItems"].append({
-        "id": item_id,  # Still use the original item ID
+        "id": item_id,  # Use the specific size item ID
         "name": custom_item.name,
         "price": custom_item.price,
         "quantity": 1,
@@ -463,10 +632,33 @@ def add_customized_item():
     # Save the updated order
     save_order(current_order, menu.get_items())
     
+    # Check if we should suggest sides/drinks or sauces - same logic as in add_to_cart
+    suggestion = None
+    suggestion_type = None
+    
+    # For fries, nuggets, and salads, suggest sauces
+    if base_item.category == "sides" or "nug" in base_item.id.lower() or base_item.category == "salads":
+        suggestion_type = "sauce"
+        suggestion = {
+            "message": "Would you like any sauce with that?",
+            "type": "sauce",
+            "item_id": item_id
+        }
+    # For burgers and sandwiches (entrees), suggest sides and drinks
+    elif base_item.category in ['burgers', 'chicken', 'fish']:
+        suggestion_type = "entree"
+        suggestion = {
+            "message": "Would you like to add a side or drink to your order?",
+            "type": "entree",
+            "item_id": item_id
+        }
+    
     return jsonify({
         "success": True, 
         "cart": current_order["menuItems"], 
-        "total": current_order["total"]
+        "total": current_order["total"],
+        "suggestion": suggestion,
+        "suggestion_type": suggestion_type
     })
 
 @app.route('/api/chat', methods=['POST'])
