@@ -425,7 +425,7 @@
       "name": "Hamburger Happy Meal",
       "id": "HAPPY001",
       "price": 4.99,
-      "ingredients": ["BURG006", "SIDE001", "DRINK013"],
+      "ingredients": ["BURG006", "SIDE001", "DRINK001"],
       "combo": true,
       "size": "kids",
       "category": "happy_meal",
@@ -435,7 +435,7 @@
       "name": "Cheeseburger Happy Meal",
       "id": "HAPPY002",
       "price": 5.29,
-      "ingredients": ["BURG004", "SIDE001", "DRINK013"],
+      "ingredients": ["BURG004", "SIDE001", "DRINK001"],
       "combo": true,
       "size": "kids",
       "category": "happy_meal",
@@ -445,7 +445,7 @@
       "name": "4-piece Chicken McNuggets Happy Meal",
       "id": "HAPPY003",
       "price": 5.49,
-      "ingredients": ["NUG001", "SIDE001", "DRINK013"],
+      "ingredients": ["NUG001", "SIDE001", "DRINK001"],
       "combo": true,
       "size": "kids",
       "category": "happy_meal",
@@ -455,7 +455,7 @@
       "name": "6-piece Chicken McNuggets Happy Meal",
       "id": "HAPPY004",
       "price": 5.99,
-      "ingredients": ["NUG002", "SIDE001", "DRINK013"],
+      "ingredients": ["NUG002", "SIDE001", "DRINK001"],
       "combo": true,
       "size": "kids",
       "category": "happy_meal",
@@ -1130,6 +1130,536 @@
       "size": "regular",
       "category": "toppings",
       "description": "Dried cranberries."
+    },
+    {
+      "name": "Spicy Chicken McNuggets (4 pc)",
+      "id": "NUG008",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": true,
+      "size": "small",
+      "category": "chicken",
+      "description": "Four spicy crispy chicken nuggets with a zesty breading."
+    },
+    {
+      "name": "Apple Slices (Medium)",
+      "id": "SIDE008",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "sides",
+      "description": "Fresh, crisp apple slices that are a wholesome snack prepared ready to eat."
+    },
+    {
+      "name": "Apple Slices (Large)",
+      "id": "SIDE009",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "sides",
+      "description": "Fresh, crisp apple slices that are a wholesome snack prepared ready to eat."
+    },
+    {
+      "name": "Side Salad (Medium)",
+      "id": "SIDE010",
+      "price": 4.49,
+      "ingredients": ["TOPPING001", "TOPPING008", "TOPPING009"],
+      "combo": false,
+      "size": "medium",
+      "category": "sides",
+      "description": "A mixed green salad with tomatoes and cucumbers."
+    },
+    {
+      "name": "Side Salad (Large)",
+      "id": "SIDE011",
+      "price": 5.49,
+      "ingredients": ["TOPPING001", "TOPPING008", "TOPPING009"],
+      "combo": false,
+      "size": "large",
+      "category": "sides",
+      "description": "A mixed green salad with tomatoes and cucumbers."
+    },
+    {
+      "name": "Mozzarella Sticks (5 pc)",
+      "id": "SIDE012",
+      "price": 4.49,
+      "ingredients": ["SAUCE014"],
+      "combo": false,
+      "size": "medium",
+      "category": "sides",
+      "description": "Five crispy, breaded mozzarella cheese sticks with marinara dipping sauce."
+    },
+    {
+      "name": "Mozzarella Sticks (8 pc)",
+      "id": "SIDE013",
+      "price": 6.49,
+      "ingredients": ["SAUCE014"],
+      "combo": false,
+      "size": "large",
+      "category": "sides",
+      "description": "Eight crispy, breaded mozzarella cheese sticks with marinara dipping sauce."
+    },
+    {
+      "name": "Onion Rings (Small)",
+      "id": "SIDE014",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "sides",
+      "description": "Golden crispy onion rings."
+    },
+    {
+      "name": "Onion Rings (Large)",
+      "id": "SIDE015",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "sides",
+      "description": "Golden crispy onion rings."
+    },
+    {
+      "name": "Premium Roast Coffee (Small)",
+      "id": "CAFE014",
+      "price": 1.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Freshly brewed 100% Arabica bean coffee."
+    },
+    {
+      "name": "Premium Roast Coffee (Large)",
+      "id": "CAFE015",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Freshly brewed 100% Arabica bean coffee."
+    },
+    {
+      "name": "Iced Coffee (Small)",
+      "id": "CAFE016",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee served over ice."
+    },
+    {
+      "name": "Iced Coffee (Large)",
+      "id": "CAFE017",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee served over ice."
+    },
+    {
+      "name": "Caramel Iced Coffee (Small)",
+      "id": "CAFE018",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee with caramel flavor, served over ice."
+    },
+    {
+      "name": "Caramel Iced Coffee (Large)",
+      "id": "CAFE019",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee with caramel flavor, served over ice."
+    },
+    {
+      "name": "Vanilla Iced Coffee (Small)",
+      "id": "CAFE020",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee with vanilla flavor, served over ice."
+    },
+    {
+      "name": "Vanilla Iced Coffee (Large)",
+      "id": "CAFE021",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Refreshing, cold brewed coffee with vanilla flavor, served over ice."
+    },
+    {
+      "name": "Latte (Small)",
+      "id": "CAFE022",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, topped with a layer of foam."
+    },
+    {
+      "name": "Latte (Large)",
+      "id": "CAFE023",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, topped with a layer of foam."
+    },
+    {
+      "name": "Vanilla Latte (Small)",
+      "id": "CAFE024",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and vanilla flavor, topped with a layer of foam."
+    },
+    {
+      "name": "Vanilla Latte (Large)",
+      "id": "CAFE025",
+      "price": 4.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and vanilla flavor, topped with a layer of foam."
+    },
+    {
+      "name": "Caramel Latte (Small)",
+      "id": "CAFE026",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and caramel flavor, topped with a layer of foam."
+    },
+    {
+      "name": "Caramel Latte (Large)",
+      "id": "CAFE027",
+      "price": 4.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and caramel flavor, topped with a layer of foam."
+    },
+    {
+      "name": "Cappuccino (Small)",
+      "id": "CAFE028",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and a thick layer of foam."
+    },
+    {
+      "name": "Cappuccino (Large)",
+      "id": "CAFE029",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk and a thick layer of foam."
+    },
+    {
+      "name": "Caramel Macchiato (Small)",
+      "id": "CAFE030",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, vanilla syrup, and caramel drizzle."
+    },
+    {
+      "name": "Caramel Macchiato (Large)",
+      "id": "CAFE031",
+      "price": 4.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, vanilla syrup, and caramel drizzle."
+    },
+    {
+      "name": "Mocha (Small)",
+      "id": "CAFE032",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, chocolate syrup, and whipped cream."
+    },
+    {
+      "name": "Mocha (Large)",
+      "id": "CAFE033",
+      "price": 4.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Espresso with steamed milk, chocolate syrup, and whipped cream."
+    },
+    {
+      "name": "Iced Mocha (Small)",
+      "id": "CAFE034",
+      "price": 3.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Espresso with milk, chocolate syrup, and whipped cream, served over ice."
+    },
+    {
+      "name": "Iced Mocha (Large)",
+      "id": "CAFE035",
+      "price": 4.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Espresso with milk, chocolate syrup, and whipped cream, served over ice."
+    },
+    {
+      "name": "Caramel Frappé (Small)",
+      "id": "CAFE036",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Blended ice, espresso, milk, caramel syrup, topped with whipped cream and caramel drizzle."
+    },
+    {
+      "name": "Caramel Frappé (Large)",
+      "id": "CAFE037",
+      "price": 4.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Blended ice, espresso, milk, caramel syrup, topped with whipped cream and caramel drizzle."
+    },
+    {
+      "name": "Mocha Frappé (Small)",
+      "id": "CAFE038",
+      "price": 3.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "mccafe",
+      "description": "Blended ice, espresso, milk, chocolate syrup, topped with whipped cream and chocolate drizzle."
+    },
+    {
+      "name": "Mocha Frappé (Large)",
+      "id": "CAFE039",
+      "price": 4.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "mccafe",
+      "description": "Blended ice, espresso, milk, chocolate syrup, topped with whipped cream and chocolate drizzle."
+    },
+    {
+      "name": "Coca-Cola (Small)",
+      "id": "DRINK010",
+      "price": 1.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "Refreshing, ice-cold Coca-Cola."
+    },
+    {
+      "name": "Coca-Cola (Large)",
+      "id": "DRINK011",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "Refreshing, ice-cold Coca-Cola."
+    },
+    {
+      "name": "Diet Coke (Small)",
+      "id": "DRINK012",
+      "price": 1.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "Zero-calorie Diet Coke with a crisp taste."
+    },
+    {
+      "name": "Diet Coke (Large)",
+      "id": "DRINK013",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "Zero-calorie Diet Coke with a crisp taste."
+    },
+    {
+      "name": "Sprite (Small)",
+      "id": "DRINK014",
+      "price": 1.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "Lemon-lime soda with a crisp taste."
+    },
+    {
+      "name": "Sprite (Large)",
+      "id": "DRINK015",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "Lemon-lime soda with a crisp taste."
+    },
+    {
+      "name": "Sweet Tea (Small)",
+      "id": "DRINK016",
+      "price": 1.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "Brewed tea with a sweet taste."
+    },
+    {
+      "name": "Sweet Tea (Large)",
+      "id": "DRINK017",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "Brewed tea with a sweet taste."
+    },
+    {
+      "name": "Unsweetened Iced Tea (Small)",
+      "id": "DRINK018",
+      "price": 1.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "Brewed tea served over ice."
+    },
+    {
+      "name": "Unsweetened Iced Tea (Large)",
+      "id": "DRINK019",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "Brewed tea served over ice."
+    },
+    {
+      "name": "Minute Maid Orange Juice (Small)",
+      "id": "DRINK020",
+      "price": 1.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "100% orange juice."
+    },
+    {
+      "name": "Minute Maid Orange Juice (Large)",
+      "id": "DRINK021",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "100% orange juice."
+    },
+    {
+      "name": "Milk (Medium)",
+      "id": "DRINK022",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "drinks",
+      "description": "Low-fat white milk."
+    },
+    {
+      "name": "Milk (Large)",
+      "id": "DRINK023",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "Low-fat white milk."
+    },
+    {
+      "name": "Chocolate Milk (Medium)",
+      "id": "DRINK024",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "medium",
+      "category": "drinks",
+      "description": "Low-fat chocolate milk."
+    },
+    {
+      "name": "Chocolate Milk (Large)",
+      "id": "DRINK025",
+      "price": 2.99,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "Low-fat chocolate milk."
+    },
+    {
+      "name": "Dasani Bottled Water (Small)",
+      "id": "DRINK026",
+      "price": 1.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "small",
+      "category": "drinks",
+      "description": "Purified water that's fresh, clean, and clear."
+    },
+    {
+      "name": "Dasani Bottled Water (Large)",
+      "id": "DRINK027",
+      "price": 2.49,
+      "ingredients": [],
+      "combo": false,
+      "size": "large",
+      "category": "drinks",
+      "description": "Purified water that's fresh, clean, and clear."
     }
   ]
 }

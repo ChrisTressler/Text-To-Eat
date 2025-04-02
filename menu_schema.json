@@ -1,41 +1,39 @@
 {
-    "type": "object",
-    "properties": {
-        "menuItems": {
+    "format": {
+      "type": "json_schema",
+      "name": "menu_data",
+      "schema": {
+        "type": "object",
+        "required": ["menuItems"],
+        "properties": {
+          "menuItems": {
             "type": "array",
             "items": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "price": {
-                        "type": "number"
-                    },
-                    "quantity": {
-                        "type": "number"
-                    },
-                    "notes": {
-                        "type": "string"
-                    }
+              "type": "object",
+              "required": ["id", "name", "price", "quantity", "notes"],
+              "properties": {
+                "id": {
+                  "type": "string"
                 },
-                "required": [
-                    "id",
-                    "name",
-                    "price",
-                    "quantity"
-                ]
+                "name": {
+                    "type": "string"
+                  },
+                "price": {
+                  "type": "number"
+                },
+                "quantity": {
+                  "type": "number"
+                },
+                "notes": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
             }
+          }
         },
-        "total": {
-            "type": "number"
-        }
-    },
-    "required": [
-        "menuItems",
-        "total"
-    ]
-}
+        "additionalProperties": false
+      },
+      "strict": true
+    }
+  }

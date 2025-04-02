@@ -5,12 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Text-To-Eat</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .item-notes {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            margin: 4px 0;
+            padding-left: 10px;
+            border-left: 2px solid #ffbc0d;
+            width: 100%;
+        }
+    </style>
 </head>
 <body class="checkout-page">
     <header>
         <div class="logo">Text-To-Eat</div>
         <div class="header-buttons">
-            <button id="back-btn" class="btn" onclick="window.location.href='{{ url_for('menu_page') }}'">Back to Menu</button>
+            <button id="back-btn" class="btn" onclick="window.location.href='{{ url_for('menu_page') }}';">Back to Menu</button>
         </div>
     </header>
 
@@ -22,11 +33,14 @@
                 <div class="order-items">
                     {% if cart_items %}
                         <ul>
-                            {% for item_id, item in cart_items.items() %}
+                            {% for item in cart_items %}
                                 <li>
                                     <span class="item-name">{{ item.name }}</span>
                                     <span class="item-quantity">x{{ item.quantity }}</span>
                                     <span class="item-price">${{ '%.2f'|format(item.price * item.quantity) }}</span>
+                                    {% if item.notes %}
+                                    <div class="item-notes">{{ item.notes }}</div>
+                                    {% endif %}
                                 </li>
                             {% endfor %}
                         </ul>
@@ -46,7 +60,7 @@
             </div>
             
             <div class="checkout-actions">
-                <button id="place-order-btn" class="btn primary" onclick="completeOrder()">PLACE ORDER</button>
+                <button id="place-order-btn" class="btn primary" onclick="completeOrder();">PLACE ORDER</button>
             </div>
         </div>
     </main>
