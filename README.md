@@ -1,4 +1,4 @@
-# Flask Speech-to-Text Application
+# Speech-to-Text application
 
 This branch provides 3 variant of real-time speech-to-text conversion using Python libraries- `SpeechRecognition`, `RealtimeSTT`, and `vosk`. The application can capture audio input from a microphone and transcribe speech into text in real time.
 
