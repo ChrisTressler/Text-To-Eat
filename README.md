@@ -26,8 +26,7 @@ https://alphacephei.com/vosk/models
 and change the path in speech_vosk_v1.py and speech_vosk_v2.py to the local folder paths.
 
 ## Usage
-
-1. Run the application and open a web browser and navigate to `http://127.0.0.1:5000/` to access the speech-to-text interface.
+Run the application and open a web browser and navigate to `http://127.0.0.1:5000/` to access the speech-to-text interface.
 
 ## Resources recommended for development
 
