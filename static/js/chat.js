@@ -29,6 +29,88 @@ function showTypingIndicator() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+function setupSpeechToText() {
+    const micButton = document.createElement('button');
+    micButton.id = 'mic-button';
+    micButton.className = 'mic-button';
+    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+    micButton.title = 'Click to speak';
+    
+    const chatInputContainer = document.querySelector('.chat-input-container');
+    if (chatInputContainer) {
+        const inputWrapper = document.createElement('div');
+        inputWrapper.className = 'input-mic-wrapper';
+      
+        const textarea = document.getElementById('llm-input');
+      
+        if (textarea) {
+            chatInputContainer.removeChild(textarea);
+            inputWrapper.appendChild(textarea);
+            inputWrapper.appendChild(micButton);
+        
+            chatInputContainer.insertBefore(inputWrapper, chatInputContainer.firstChild);
+        }
+    }
+    
+    let recognition = null;
+    try {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+    } catch (e) {
+      console.error('Speech recognition not supported:', e);
+      micButton.disabled = true;
+      micButton.title = 'Speech recognition not supported in this browser';
+    }
+    
+    if (recognition) {
+        let isListening = false;
+      
+        micButton.addEventListener('click', () => {
+            const textarea = document.getElementById('llm-input');
+            
+            if (isListening) {
+            recognition.stop();
+            micButton.classList.remove('listening');
+            micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            } else {
+            recognition.start();
+            micButton.classList.add('listening');
+            micButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+            }
+            
+            isListening = !isListening;
+        });
+      
+        recognition.onresult = (event) => {
+                const textarea = document.getElementById('llm-input');
+                const resultIndex = event.resultIndex;
+                const transcript = event.results[resultIndex][0].transcript;
+                
+                textarea.value = transcript;
+        };
+      
+        recognition.onend = () => {
+                isListening = false;
+                micButton.classList.remove('listening');
+                micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+        };
+      
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            isListening = false;
+            micButton.classList.remove('listening');
+            micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            
+            if (window.showNotification) {
+            window.showNotification('Speech recognition error: ' + event.error, 'error');
+            }
+        };
+    }
+}
+
 function removeTypingIndicator() {
     const indicator = document.getElementById('typing-indicator');
     if (indicator) {
@@ -244,4 +326,8 @@ window.addEventListener('storage', function(e) {
             window.updateGlobalCartState();
         }
     }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(setupSpeechToText, 500);
 });
