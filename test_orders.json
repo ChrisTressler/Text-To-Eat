@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "description": "Order a Double Quarter Pounder with Cheese, add bacon, extra cheese, no onions. Large fries, 6 pc spicy mcnugget with sweet n sour + habanero ranch sauce. Side salad with no cucumbers, and a mocha frappe."
+    },
+    {
+        "id": 2,
+        "description": "Order a 10-piece Chicken McNuggets with BBQ sauce, small fries, and a small Sprite"
+    },
+    {
+        "id": 3,
+        "description": "Order a Quarter Pounder with Cheese, no pickles, large fries, and a large Diet Coke"
+    },
+    {
+        "id": 4,
+        "description": "Order a McChicken sandwich, apple pie, and a medium sweet tea"
+    },
+    {
+        "id": 5,
+        "description": "Order a Filet-O-Fish, medium fries, and a chocolate milk"
+    }
+] 

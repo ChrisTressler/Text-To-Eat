@@ -1,0 +1,215 @@
+=== TEST COMPLETED: 2025-04-08 14:06:13 ===
+User ID: 54
+Order Prompt: Order a Quarter Pounder with Cheese, no pickles, large fries, and a large Diet Coke
+Method: Manual
+Order Time: 16.03 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (x1) - $7.99
+  • Apple Slices (Large) (x1) - $3.99
+  • Caramel Frappé (Large) (x1) - $4.99
+Total: $16.97
+
+
+=== TEST COMPLETED: 2025-04-08 14:06:26 ===
+User ID: 54
+Order Prompt: Order a McChicken sandwich, apple pie, and a medium sweet tea
+Method: AI Chatbot
+Order Time: 12.11 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (Customized) (x1) - $7.99 - Notes: 
+  • Onion Rings (x1) - $3.49
+  • Caramel Frappé (x1) - $4.49
+Total: $15.97
+
+
+=== TEST COMPLETED: 2025-04-08 14:06:35 ===
+User ID: 54
+Order Prompt: Order a Quarter Pounder with Cheese, no pickles, large fries, and a large Diet Coke
+Method: AI Chatbot
+Order Time: 9.39 seconds
+Final Cart:
+  • Bacon Ranch Crispy Chicken Salad (x1) - $6.99
+  • Honey Mustard Sauce (x1) - $0.00
+Total: $6.99
+
+
+=== TEST COMPLETED: 2025-04-08 14:06:42 ===
+User ID: 54
+Order Prompt: Order a Big Mac, medium fries, and a medium Coke
+Method: Manual
+Order Time: 6.65 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (x1) - $7.99
+Total: $7.99
+
+
+=== TEST COMPLETED: 2025-04-08 14:06:46 ===
+User ID: 54
+Order Prompt: Order a Filet-O-Fish, medium fries, and a chocolate milkshake
+Method: Manual
+Order Time: 4.66 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (x1) - $7.99
+Total: $7.99
+
+
+=== TEST COMPLETED: 2025-04-08 14:06:51 ===
+User ID: 54
+Order Prompt: Order a Filet-O-Fish, medium fries, and a chocolate milkshake
+Method: AI Chatbot
+Order Time: 4.61 seconds
+Final Cart:
+  • Cheeseburger (x1) - $2.99
+Total: $2.99
+
+
+=== TEST COMPLETED: 2025-04-08 14:06:56 ===
+User ID: 54
+Order Prompt: Order a 10-piece Chicken McNuggets with BBQ sauce, small fries, and a small Sprite
+Method: Manual
+Order Time: 4.45 seconds
+Final Cart:
+  • Cheeseburger (x1) - $2.99
+Total: $2.99
+
+
+=== TEST COMPLETED: 2025-04-08 14:07:01 ===
+User ID: 54
+Order Prompt: Order a 10-piece Chicken McNuggets with BBQ sauce, small fries, and a small Sprite
+Method: AI Chatbot
+Order Time: 5.74 seconds
+Final Cart:
+  • Quarter Pounder with Cheese (x1) - $6.49
+Total: $6.49
+
+
+=== TEST COMPLETED: 2025-04-08 14:07:06 ===
+User ID: 54
+Order Prompt: Order a McChicken sandwich, apple pie, and a medium sweet tea
+Method: Manual
+Order Time: 5.0 seconds
+Final Cart:
+  • Cheeseburger (x1) - $2.99
+Total: $2.99
+
+
+=== TEST COMPLETED: 2025-04-08 14:07:12 ===
+User ID: 54
+Order Prompt: Order a Big Mac, medium fries, and a medium Coke
+Method: AI Chatbot
+Order Time: 5.39 seconds
+Final Cart:
+  • Cheeseburger (x1) - $2.99
+Total: $2.99
+
+
+=== TEST COMPLETED: 2025-04-08 14:37:16 ===
+User ID: 99
+Order Prompt: Order a Big Mac, medium fries, and a medium Coke
+Method: Manual
+Order Time: 5.45 seconds
+Final Cart:
+  • Quarter Pounder with Cheese (x1) - $6.49
+Total: $6.49
+
+
+=== TEST COMPLETED: 2025-04-08 14:37:28 ===
+User ID: 99
+Order Prompt: Order a McChicken sandwich, apple pie, and a medium sweet tea
+Method: Manual
+Order Time: 12.41 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (x1) - $7.99
+  • Apple Slices (Medium) (x1) - $2.99
+Total: $10.98
+
+
+=== TEST COMPLETED: 2025-04-08 14:42:32 ===
+User ID: 99
+Order Prompt: Order a McChicken sandwich, apple pie, and a medium sweet tea
+Method: AI Chatbot
+Order Time: 303.71 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (x1) - $7.99
+  • Apple Slices (Medium) (x1) - $2.99
+  • Caramel Frappé (x1) - $4.49
+Total: $15.47
+
+
+=== TEST COMPLETED: 2025-04-08 14:42:38 ===
+User ID: 99
+Order Prompt: Order a Big Mac, medium fries, and a medium Coke
+Method: AI Chatbot
+Order Time: 6.26 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (x1) - $7.99
+Total: $7.99
+
+
+=== TEST COMPLETED: 2025-04-08 14:42:55 ===
+User ID: 99
+Order Prompt: Order a Filet-O-Fish, medium fries, and a chocolate milkshake
+Method: AI Chatbot
+Order Time: 16.21 seconds
+Final Cart:
+  • Double Cheeseburger (x1) - $3.99
+  • Caramel Frappé (Small) (x1) - $3.99
+Total: $7.98
+
+
+=== TEST COMPLETED: 2025-04-08 14:46:00 ===
+User ID: 99
+Order Prompt: Order a 10-piece Chicken McNuggets with BBQ sauce, small fries, and a small Sprite
+Method: AI Chatbot
+Order Time: 185.51 seconds
+Final Cart:
+  • Cheeseburger (x2) - $5.98
+  • French Fries (Large) (x1) - $3.49
+  • Caramel Frappé (Large) (x1) - $4.99
+Total: $14.46
+
+
+=== TEST COMPLETED: 2025-04-08 14:59:31 ===
+User ID: 99
+Order Prompt: Order a 10-piece Chicken McNuggets with BBQ sauce, small fries, and a small Sprite
+Method: Manual
+Order Time: 810.32 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (x1) - $7.99
+  • Apple Slices (Large) (x1) - $3.99
+  • Caramel Frappé (Large) (x1) - $4.99
+Total: $16.97
+
+
+=== TEST COMPLETED: 2025-04-08 15:01:31 ===
+User ID: 4
+Order Prompt: Order a Quarter Pounder with Cheese, no pickles, large fries, and a large Diet Coke
+Method: AI Chatbot
+Order Time: 5.69 seconds
+Final Cart:
+  • Cart was empty
+
+
+=== TEST COMPLETED: 2025-04-08 15:14:44 ===
+User ID: 4
+Order Prompt: Order a Double Quarter Pounder with Cheese, add bacon, extra cheese, no onions. Large fries, 6 pc spicy mcnugget with sweet n sour + habanero ranch sauce. Side salad with no cucumbers, and a mocha frappe.
+Method: AI Chatbot
+Order Time: 792.9 seconds
+Final Cart:
+  • Double Quarter Pounder with Cheese (x1) - $7.99 - Notes: Add bacon, extra cheese, no onions
+  • French Fries (Large) (x1) - $3.49 - Notes: 
+  • Spicy Chicken McNuggets (6 pc) (x1) - $4.99 - Notes: Sweet 'N Sour and Habanero Ranch sauce
+  • Side Salad (x1) - $3.49 - Notes: No cucumbers
+  • Mocha (x1) - $3.99 - Notes: 
+Total: $23.95
+
+
+=== TEST COMPLETED: 2025-04-08 15:15:19 ===
+User ID: 4
+Order Prompt: Order a Filet-O-Fish, medium fries, and a chocolate milk
+Method: AI Chatbot
+Order Time: 35.18 seconds
+Final Cart:
+  • Cart was empty
+
+

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Food Kiosk - Testing Complete</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .complete-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .complete-icon {
+            font-size: 60px;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+        
+        .complete-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .complete-message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #666;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="complete-container">
+        <div class="complete-icon">✓</div>
+        <h1 class="complete-title">Testing Complete!</h1>
+        <p class="complete-message">
+            Thank you for participating in our research study. You have successfully completed all the test orders.
+            Your contributions will help us improve the ordering experience.
+        </p>
+        <p class="complete-message">
+            You may now close this window or return to the start page.
+        </p>
+        <a href="{{ url_for('test_login') }}" class="btn">Return to Start</a>
+    </div>
+</body>
+</html> 

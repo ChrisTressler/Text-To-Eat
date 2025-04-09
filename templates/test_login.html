@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Food Kiosk - Test Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .login-container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .login-form {
+            margin-top: 30px;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .login-form button {
+            background-color: #ff5c00;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-form button:hover {
+            background-color: #e65100;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Fast Food Kiosk User Testing</h1>
+        <p>Welcome to the user testing session. Please enter your assigned user ID to begin.</p>
+        
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+        
+        <form class="login-form" method="post" action="{{ url_for('test_login') }}">
+            <input type="text" name="user_id" placeholder="Enter your User ID" required>
+            <button type="submit">Start Testing</button>
+        </form>
+    </div>
+</body>
+</html> 

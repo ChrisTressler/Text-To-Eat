@@ -56,9 +56,13 @@ function setupSpeechToText() {
     try {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognition = new SpeechRecognition();
-      recognition.continuous = false;
+      recognition.continuous = true;
       recognition.interimResults = true;
       recognition.lang = 'en-US';
+      
+      if (SpeechRecognition.maxAlternatives) {
+        recognition.maxAlternatives = 1;
+      }
     } catch (e) {
       console.error('Speech recognition not supported:', e);
       micButton.disabled = true;
@@ -67,35 +71,65 @@ function setupSpeechToText() {
     
     if (recognition) {
         let isListening = false;
+        let finalTranscript = '';
+        let silenceTimer = null;
+        const silenceTimeout = 4000;
       
         micButton.addEventListener('click', () => {
             const textarea = document.getElementById('llm-input');
             
             if (isListening) {
-            recognition.stop();
-            micButton.classList.remove('listening');
-            micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                clearTimeout(silenceTimer);
+                recognition.stop();
+                micButton.classList.remove('listening');
+                micButton.innerHTML = '<i class="fas fa-microphone"></i>';
             } else {
-            recognition.start();
-            micButton.classList.add('listening');
-            micButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                finalTranscript = '';
+                recognition.start();
+                micButton.classList.add('listening');
+                micButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
             }
             
             isListening = !isListening;
         });
       
         recognition.onresult = (event) => {
-                const textarea = document.getElementById('llm-input');
-                const resultIndex = event.resultIndex;
-                const transcript = event.results[resultIndex][0].transcript;
-                
-                textarea.value = transcript;
+            const textarea = document.getElementById('llm-input');
+            let interimTranscript = '';
+            
+            if (silenceTimer) {
+                clearTimeout(silenceTimer);
+            }
+            
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript + ' ';
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            
+            textarea.value = finalTranscript + interimTranscript;
+            
+            silenceTimer = setTimeout(() => {
+                if (isListening) {
+                    if (finalTranscript.trim() !== '') {
+                        recognition.stop();
+                    }
+                }
+            }, silenceTimeout);
         };
       
         recognition.onend = () => {
-                isListening = false;
-                micButton.classList.remove('listening');
-                micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            isListening = false;
+            micButton.classList.remove('listening');
+            micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            
+            if (silenceTimer) {
+                clearTimeout(silenceTimer);
+                silenceTimer = null;
+            }
         };
       
         recognition.onerror = (event) => {
@@ -104,8 +138,13 @@ function setupSpeechToText() {
             micButton.classList.remove('listening');
             micButton.innerHTML = '<i class="fas fa-microphone"></i>';
             
+            if (silenceTimer) {
+                clearTimeout(silenceTimer);
+                silenceTimer = null;
+            }
+            
             if (window.showNotification) {
-            window.showNotification('Speech recognition error: ' + event.error, 'error');
+                window.showNotification('Speech recognition error: ' + event.error, 'error');
             }
         };
     }
@@ -283,6 +322,32 @@ async function sendMessage(message) {
     }
 }
 
+function setupAutoResizingTextarea() {
+    const textarea = document.getElementById('llm-input');
+    if (!textarea) return;
+    
+    // Set initial height
+    textarea.style.height = 'auto';
+    textarea.style.height = (textarea.scrollHeight) + 'px';
+    
+    // Set minimum and maximum heights
+    textarea.style.minHeight = '50px';
+    textarea.style.maxHeight = '200px';
+    
+    // Function to resize the textarea
+    const resizeTextarea = () => {
+        textarea.style.height = 'auto';
+        textarea.style.height = (textarea.scrollHeight) + 'px';
+    };
+    
+    // Add event listeners for input and focus
+    textarea.addEventListener('input', resizeTextarea);
+    textarea.addEventListener('focus', resizeTextarea);
+    
+    // Also resize when window is resized
+    window.addEventListener('resize', resizeTextarea);
+}
+
 function setupChatInterface() {
     if (llmSubmit && llmInput) {
         llmSubmit.addEventListener('click', function() {
@@ -290,6 +355,8 @@ function setupChatInterface() {
             if (message) {
                 sendMessage(message);
                 llmInput.value = '';
+                // Reset height after clearing
+                llmInput.style.height = '50px';
             }
         });
     }
@@ -298,14 +365,13 @@ function setupChatInterface() {
         llmInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                const message = llmInput.value.trim();
-                if (message) {
-                    sendMessage(message);
-                    llmInput.value = '';
-                }
+                llmSubmit.click();
             }
         });
     }
+    
+    // Initialize auto-resizing
+    setupAutoResizingTextarea();
 }
 
 function initializeChat() {

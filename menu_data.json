@@ -1302,26 +1302,6 @@
       "description": "Spicy habanero ranch sauce."
     },
     {
-      "name": "Cane's Sauce",
-      "id": "SAUCE012",
-      "price": 0.00,
-      "ingredients": [],
-      "combo": false,
-      "size": "packet",
-      "category": "condiments",
-      "description": "Cajun-inflected sauce from Raising Cane's."
-    },
-    {
-      "name": "Arby's Horsey Sauce",
-      "id": "SAUCE013",
-      "price": 0.00,
-      "ingredients": [],
-      "combo": false,
-      "size": "packet",
-      "category": "condiments",
-      "description": "Creamy horseradish sauce."
-    },
-    {
       "name": "Marinara Sauce",
       "id": "SAUCE014",
       "price": 0.00,

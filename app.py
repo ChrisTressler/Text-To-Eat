@@ -4,6 +4,7 @@ import time
 from datetime import datetime
 import json
 import sys
+import random
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -13,6 +14,14 @@ from new_agent import client, load_current_order, save_order, initialize_new_ord
 
 app = Flask(__name__)
 app.secret_key = 'fastfoodkiosk_secretkey'
+
+
+def load_test_orders():
+    with open('test_orders.json', 'r', encoding='utf-8') as file:
+        return json.load(file)
+
+#placeholders right now
+TEST_ORDERS = load_test_orders()
 
 class CustomMenu(Menu):
     def load_menu(self, filename: str):
@@ -91,13 +100,6 @@ class CustomMenu(Menu):
                 # Normal logic for other toppings
                 
                 is_already_ingredient = False
-                """
-                if hasattr(item, 'ingredients'):
-                    for ing in item.ingredients:
-                        if potential_extra.id == ing.id:
-                            is_already_ingredient = True
-                            break
-                            """
                 
                 if not is_already_ingredient:
                     extras.append({
@@ -107,131 +109,7 @@ class CustomMenu(Menu):
                     })
         
         return extras
-
-    def find_item_by_name(self, name, fuzzy=False):
-        if not name:
-            return None
-            
-        name_lower = name.lower().strip()
-        
-        for item in self.items.values():
-            if item.name.lower() == name_lower:
-                return item
-        
-        direct_matches = {
-            "coke": "DRINK001",
-            "coca-cola": "DRINK001",
-            "coca cola": "DRINK001",
-            "diet coke": "DRINK002",
-            "sprite": "DRINK003",
-            "sweet tea": "DRINK004",
-            "iced tea": "DRINK005",
-            "unsweetened tea": "DRINK005",
-            "orange juice": "DRINK006",
-            "milk": "DRINK007",
-            "chocolate milk": "DRINK008",
-            "water": "DRINK009",
-            "dasani": "DRINK009",
-            
-            "big mac": "BURG001",
-            "quarter pounder": "BURG002",
-            "double quarter pounder": "BURG003",
-            "cheeseburger": "BURG004",
-            "double cheeseburger": "BURG005",
-            "hamburger": "BURG006",
-            "mcdouble": "BURG007",
-            
-            "mcchicken": "CHICK001",
-            "spicy mcchicken": "CHICK002",
-            "crispy chicken": "CHICK003",
-            "spicy crispy chicken": "CHICK004",
-            "deluxe crispy chicken": "CHICK005",
-            
-            "filet-o-fish": "FISH001",
-            "fish sandwich": "FISH001",
-            "fish filet": "FISH001",
-            
-            "4 piece nuggets": "NUG001",
-            "4 nuggets": "NUG001",
-            "4pc nuggets": "NUG001",
-            "6 piece nuggets": "NUG002",
-            "6 nuggets": "NUG002",
-            "6pc nuggets": "NUG002",
-            "10 piece nuggets": "NUG003",
-            "10 nuggets": "NUG003",
-            "10pc nuggets": "NUG003",
-            "20 piece nuggets": "NUG004",
-            "20 nuggets": "NUG004",
-            "20pc nuggets": "NUG004",
-            "40 piece nuggets": "NUG005",
-            "40 nuggets": "NUG005",
-            "40pc nuggets": "NUG005",
-            "6 spicy nuggets": "NUG006",
-            "6pc spicy nuggets": "NUG006",
-            "10 spicy nuggets": "NUG007",
-            "10pc spicy nuggets": "NUG007",
-            
-            "small fries": "SIDE001",
-            "medium fries": "SIDE002",
-            "large fries": "SIDE003",
-            "fries": "SIDE002",
-            
-            "apple pie": "DESSERT001",
-            "muffin": "DESSERT002", 
-            "blueberry muffin": "DESSERT002",
-            "cinnamon roll": "DESSERT003",
-            "cookie": "DESSERT004",
-            "chocolate chip cookie": "DESSERT004",
-            "oreo mcflurry": "DESSERT005",
-            "m&m mcflurry": "DESSERT006",
-            "vanilla cone": "DESSERT007",
-            "ice cream cone": "DESSERT007",
-            "hot fudge sundae": "DESSERT008",
-            "caramel sundae": "DESSERT009",
-        }
-        
-        for pattern, item_id in direct_matches.items():
-            if name_lower == pattern:
-                return self.get_item_information(item_id)
-            if pattern in name_lower:
-                potential_item = self.get_item_information(item_id)
-                if potential_item and potential_item.name.lower() in name_lower:
-                    return potential_item
-        
-        if fuzzy:
-            best_match = None
-            best_match_score = 0
-            
-            for item in self.items.values():
-                item_name_lower = item.name.lower()
-                
-                if item.category in ['ingredients', 'toppings', 'patties', 'condiments']:
-                    continue
-                    
-                if name_lower in item_name_lower:
-                    score = len(name_lower) / len(item_name_lower) * 100
-                    if score > best_match_score:
-                        best_match = item
-                        best_match_score = score
-                elif item_name_lower in name_lower:
-                    score = len(item_name_lower) / len(name_lower) * 100
-                    if score > best_match_score:
-                        best_match = item
-                        best_match_score = score
-            
-            if best_match_score > 60:
-                return best_match
-        
-        sizes = ["small", "medium", "large"]
-        for size in sizes:
-            if size in name_lower:
-                size_stripped = name_lower.replace(size, "").strip()
-                for item in self.items.values():
-                    if size_stripped in item.name.lower() and item.size.lower() == size:
-                        return item
-        
-        return None
-        
+      
     def find_items_by_category(self, category):
         matching_items = []
         category_lower = category.lower()
@@ -271,15 +149,94 @@ except Exception as e:
 @app.route('/')
 def start_page():
     session.clear()
+    # Redirect to test login page
+    return redirect(url_for('test_login'))
+
+@app.route('/test_login', methods=['GET', 'POST'])
+def test_login():
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        if not user_id:
+            return render_template('test_login.html', error="Please enter a user ID")
+        
+        # Store user ID in session
+        session['user_id'] = user_id
+        
+        # Create randomized test sequence
+
+        # Can set up this sequence however we want to optimize testing
+        # For now, just doing a random order twice with AI and manually
+        test_sequence = []
+        for order in TEST_ORDERS:
+            # Each order needs to be done twice - once with AI, once manually
+            test_sequence.append({"order_id": order["id"], "method": "ai"})
+            test_sequence.append({"order_id": order["id"], "method": "manual"})
+        
+        # Shuffle the sequence
+        random.shuffle(test_sequence)
+        
+        # Store in session
+        session['test_sequence'] = test_sequence
+        session['current_test_index'] = 0
+        
+        # Redirect to first test
+        return redirect(url_for('start_test'))
+    
+    return render_template('test_login.html')
+
+@app.route('/start_test')
+def start_test():
+    if 'user_id' not in session:
+        return redirect(url_for('test_login'))
+    
+    # Check if we've completed all tests
+    if session['current_test_index'] >= len(session['test_sequence']):
+        return redirect(url_for('test_complete'))
+    
+    # Get current test
+    current_test = session['test_sequence'][session['current_test_index']]
+    order_id = current_test['order_id']
+    method = current_test['method']
+    
+    # Get order details
+    order_details = next((order for order in TEST_ORDERS if order['id'] == order_id), None)
+    
+    if not order_details:
+        return "Error: Order not found", 500
+    
     # Initialize a new empty order
     initialize_new_order()
-    return render_template('index.html')
+    
+    # Store test start time
+    session['test_start_time'] = time.time()
+    
+    # Redirect to appropriate test page
+    if method == 'ai':
+        return render_template('test_ai.html', 
+                              order_description=order_details['description'],
+                              order_id=order_id,
+                              test_index=session['current_test_index'] + 1,
+                              total_tests=len(session['test_sequence']))
+    else:
+        return render_template('test_manual.html', 
+                              order_description=order_details['description'],
+                              order_id=order_id,
+                              test_index=session['current_test_index'] + 1,
+                              total_tests=len(session['test_sequence']))
 
 @app.route('/menu')
 def menu_page():
+    if 'user_id' not in session:
+        return redirect(url_for('test_login'))
+    
     if 'start_time' not in session:
         session['start_time'] = time.time()
-        
+    
+    # Get current test info for display
+    current_test = session['test_sequence'][session['current_test_index']]
+    order_id = current_test['order_id']
+    order_details = next((order for order in TEST_ORDERS if order['id'] == order_id), None)
+    
     # Ensure we have a valid order file
     if not os.path.exists('order.json'):
         initialize_new_order()
@@ -375,13 +332,17 @@ def menu_page():
     
     return render_template('menu.html', 
                           categories=categories, 
-                          menu_items=display_items)
+                          menu_items=display_items,
+                          order_description=order_details['description'])
 
 @app.route('/checkout')
 def checkout_page():
+    if 'user_id' not in session:
+        return redirect(url_for('test_login'))
+    
     elapsed_time = 0
-    if 'start_time' in session:
-        elapsed_time = time.time() - session['start_time']
+    if 'test_start_time' in session:
+        elapsed_time = time.time() - session.get('test_start_time', time.time())
         
     minutes = int(elapsed_time // 60)
     seconds = int(elapsed_time % 60)
@@ -390,15 +351,121 @@ def checkout_page():
     # Load current order from order.json
     current_order = load_current_order()
     
+    # Get current test info
+    current_test = session['test_sequence'][session['current_test_index']]
+    order_id = current_test['order_id']
+    method = current_test['method']
+    order_details = next((order for order in TEST_ORDERS if order['id'] == order_id), None)
+    
     return render_template('checkout.html', 
                           time_display=time_display,
                           cart_items=current_order.get("menuItems", []),
-                          cart_total=current_order.get("total", 0.0))
+                          cart_total=current_order.get("total", 0.0),
+                          order_description=order_details['description'])
+
+@app.route('/test_complete', methods=['GET'])
+def test_complete():
+    if 'user_id' not in session:
+        return redirect(url_for('test_login'))
+    
+    return render_template('test_complete.html')
+
+@app.route('/api/complete_test', methods=['POST'])
+def complete_test():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Not logged in"}), 401
+    
+    # Calculate test duration
+    test_duration = time.time() - session.get('test_start_time', time.time())
+    
+    # Get current test info
+    current_test = session['test_sequence'][session['current_test_index']]
+    order_id = current_test['order_id']
+    method = current_test['method']
+    
+    # Get order details
+    order_details = next((order for order in TEST_ORDERS if order['id'] == order_id), None)
+    
+    # Load final order
+    final_order = load_current_order()
+    
+    # Create a human-readable log entry in a separate file
+    with open('test_results_readable.txt', 'a', encoding='utf-8') as f:
+        f.write(f"=== TEST COMPLETED: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===\n")
+        f.write(f"User ID: {session['user_id']}\n")
+        f.write(f"Order Prompt: {order_details['description']}\n")
+        f.write(f"Method: {'AI Chatbot' if method == 'ai' else 'Manual'}\n")
+        f.write(f"Order Time: {round(test_duration, 2)} seconds\n")
+        f.write("Final Cart:\n")
+        
+        if "menuItems" in final_order and final_order["menuItems"]:
+            for item in final_order["menuItems"]:
+                item_notes = f" - Notes: {item.get('notes', 'None')}" if 'notes' in item else ""
+                f.write(f"  • {item['name']} (x{item['quantity']}) - ${item['price'] * item['quantity']:.2f}{item_notes}\n")
+            f.write(f"Total: ${final_order.get('total', 0):.2f}\n")
+        else:
+            f.write("  • Cart was empty\n")
+        
+        f.write("\n\n")
+    
+    # Move to next test
+    session['current_test_index'] += 1
+    
+    return jsonify({"success": True, "redirect": url_for('start_test')})
 
 @app.route('/api/add_to_cart', methods=['POST'])
 def add_to_cart():
     item_id = request.json.get('item_id')
+    # Add support for multiple items in a single request
+    multiple_items = request.json.get('multiple_items', False)
+    items_to_add = request.json.get('items', [])
     
+    # If we're adding multiple items at once
+    if multiple_items and items_to_add:
+        # Load current order from order.json
+        current_order = load_current_order()
+        
+        # Prepare the order structure if needed
+        if "menuItems" not in current_order:
+            current_order["menuItems"] = []
+        
+        # Add each item to the cart
+        for item_data in items_to_add:
+            item_id_to_add = item_data.get('id')
+            item = menu.get_item_information(item_id_to_add)
+            if not item:
+                continue  # Skip invalid items
+                
+            # Check if item already exists in order
+            item_exists = False
+            for order_item in current_order["menuItems"]:
+                if order_item["id"] == item_id_to_add:
+                    order_item["quantity"] += 1
+                    item_exists = True
+                    break
+            
+            # If item doesn't exist, add it
+            if not item_exists:
+                current_order["menuItems"].append({
+                    "id": item_id_to_add,
+                    "name": item.name,
+                    "price": item.price,
+                    "quantity": 1
+                })
+        
+        # Calculate the new total
+        current_order["total"] = sum(item["price"] * item["quantity"] for item in current_order["menuItems"])
+        
+        # Save the updated order
+        save_order(current_order, menu.get_items())
+        
+        return jsonify({
+            "success": True, 
+            "cart": current_order["menuItems"], 
+            "total": current_order["total"]
+        })
+    
+    # Original single item logic
     item = menu.get_item_information(item_id)
     if not item:
         return jsonify({"success": False, "message": "Item not found"})
@@ -437,7 +504,7 @@ def add_to_cart():
     suggestion = None
     suggestion_type = None
     
-        # For fries, nuggets, and salads, suggest sauces
+    # For fries, nuggets, and salads, suggest sauces
     if item.category == "sides" or "nug" in item.id.lower() or item.category == "salads":
         suggestion_type = "sauce"
         suggestion = {

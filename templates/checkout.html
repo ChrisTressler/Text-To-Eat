@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Text-To-Eat</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .item-notes {
             font-size: 0.85rem;
@@ -15,11 +16,116 @@
             border-left: 2px solid #ffbc0d;
             width: 100%;
         }
+        
+        .checkout-page main {
+            padding: 20px;
+        }
+        
+        .checkout-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .order-items ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .order-items li {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .item-name {
+            flex-grow: 1;
+            font-weight: bold;
+        }
+        
+        .item-quantity, .item-price {
+            margin-left: 15px;
+        }
+        
+        .item-price {
+            color: #ffa500;
+            font-weight: bold;
+        }
+        
+        .order-total {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .order-total h3 {
+            color: #ffbc0d;
+        }
+        
+        .timer-display {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .timer {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ffbc0d;
+            margin: 15px 0;
+        }
+        
+        .timer-note {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .checkout-actions {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        #complete-test-btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            background-color: #ffbc0d;
+            color: #292929;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        #complete-test-btn:hover {
+            background-color: #ffa500;
+        }
+        
+        .order-task {
+            background-color: #f5f5f5;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-left: 15px;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body class="checkout-page">
     <header>
         <div class="logo">Text-To-Eat</div>
+        <div class="order-task">
+            <span>Task: {{ order_description }}</span>
+        </div>
         <div class="header-buttons">
             <button id="back-btn" class="btn" onclick="window.location.href='{{ url_for('menu_page') }}';">Back to Menu</button>
         </div>
@@ -60,15 +166,31 @@
             </div>
             
             <div class="checkout-actions">
-                <button id="place-order-btn" class="btn primary" onclick="completeOrder();">PLACE ORDER</button>
+                <button id="complete-test-btn" class="btn primary">PLACE ORDER</button>
             </div>
         </div>
     </main>
 
     <script>
-        document.getElementById('place-order-btn').addEventListener('click', function() {
-            alert('Order placed successfully! Thank you for your order.');
-            window.location.href = "{{ url_for('start_page') }}";
+        document.getElementById('complete-test-btn').addEventListener('click', function() {
+            fetch('/api/complete_test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert('Error completing test: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while completing the test.');
+            });
         });
     </script>
 </body>

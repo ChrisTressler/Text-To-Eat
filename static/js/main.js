@@ -242,7 +242,9 @@ function forceCartRefresh() {
             
             const cartCountBadge = document.getElementById('cart-count');
             if (cartCountBadge) {
-                const itemCount = Object.keys(data.cart).length;
+                const itemCount = Array.isArray(data.cart) 
+                    ? data.cart.length 
+                    : Object.keys(data.cart).length;
                 cartCountBadge.textContent = itemCount.toString();
                 cartCountBadge.style.display = itemCount > 0 ? 'flex' : 'none';
             }
@@ -370,8 +372,12 @@ function updateCartCountBadge() {
     
     let totalItems = 0;
     
-    if (cartItems && Object.keys(cartItems).length > 0) {
-        for (const [itemId, item] of Object.entries(cartItems)) {
+    if (Array.isArray(cartItems)) {
+        // If cartItems is an array
+        totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    } else if (cartItems && Object.keys(cartItems).length > 0) {
+        // If cartItems is an object
+        for (const item of Object.values(cartItems)) {
             totalItems += item.quantity;
         }
     }
@@ -654,11 +660,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (llmSubmit && llmInput) {
         llmSubmit.addEventListener('click', function() {
             const userInput = llmInput.value.trim();
-            
-            if (userInput === '') {
-                showNotification('Please enter your order', 'error');
-                return;
-            }
             
             const userMsgDiv = document.createElement('div');
             userMsgDiv.className = 'message user';
@@ -1140,7 +1141,12 @@ function updateCartDisplay() {
     
     cartItemsDiv.innerHTML = '';
     
-    if (Object.keys(cartItems).length === 0) {
+    // Check if cartItems is empty
+    const isCartEmpty = Array.isArray(cartItems) 
+        ? cartItems.length === 0 
+        : Object.keys(cartItems).length === 0;
+    
+    if (isCartEmpty) {
         cartItemsDiv.innerHTML = '<p>Your cart is empty.</p>';
         cartTotalPrice.textContent = '$0.00';
         return;
@@ -1148,9 +1154,14 @@ function updateCartDisplay() {
     
     const ul = document.createElement('ul');
     
-    for (const [itemId, item] of Object.entries(cartItems)) {
+    // Handle both array and object formats of cartItems
+    const itemsToDisplay = Array.isArray(cartItems) 
+        ? cartItems 
+        : Object.values(cartItems);
+    
+    for (const item of itemsToDisplay) {
         const li = document.createElement('li');
-        li.dataset.itemId = itemId;
+        li.dataset.itemId = item.id;
         
         // Check if this is a combo meal
         if (item.is_combo) {
@@ -1210,7 +1221,7 @@ function updateCartDisplay() {
             removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
             removeBtn.title = 'Remove combo';
             removeBtn.addEventListener('click', function() {
-                removeFromCart(itemId);
+                removeFromCart(item.id);
             });
             
             const decreaseBtn = document.createElement('button');
@@ -1218,7 +1229,7 @@ function updateCartDisplay() {
             decreaseBtn.innerHTML = '<i class="fas fa-minus"></i>';
             decreaseBtn.title = 'Decrease quantity';
             decreaseBtn.addEventListener('click', function() {
-                removeFromCart(itemId, true);
+                removeFromCart(item.id, true);
             });
             
             const actionsContainer = document.createElement('div');
@@ -1259,7 +1270,7 @@ function updateCartDisplay() {
             removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
             removeBtn.title = 'Remove item';
             removeBtn.addEventListener('click', function() {
-                removeFromCart(itemId);
+                removeFromCart(item.id);
             });
             
             const decreaseBtn = document.createElement('button');
@@ -1267,7 +1278,7 @@ function updateCartDisplay() {
             decreaseBtn.innerHTML = '<i class="fas fa-minus"></i>';
             decreaseBtn.title = 'Decrease quantity';
             decreaseBtn.addEventListener('click', function() {
-                removeFromCart(itemId, true);
+                removeFromCart(item.id, true);
             });
             
             const actionsContainer = document.createElement('div');
@@ -1298,6 +1309,22 @@ function updateCartDisplay() {
 }
 
 function removeFromCart(itemId, decreaseOnly = false) {
+    // Find the item in the cart array
+    let itemIndex = -1;
+    if (Array.isArray(cartItems)) {
+        // If cartItems is already an array (from API)
+        itemIndex = cartItems.findIndex(item => item.id === itemId);
+    } else {
+        // If cartItems is still an object (from localStorage)
+        itemIndex = Object.values(cartItems).findIndex(item => item.id === itemId);
+    }
+    
+    if (itemIndex === -1) {
+        console.error('Item not found in cart:', itemId);
+        showNotification('Error: Item not found in cart', 'error');
+        return;
+    }
+
     fetch('/api/remove_from_cart', {
         method: 'POST',
         headers: {
@@ -1635,6 +1662,7 @@ function openEntreeSuggestionModal(itemId) {
     suggestedItemType = 'entree';
     suggestedItemId = itemId;
     selectedSide = null;
+    selectedDrink = null; // Reset the drink selection
     
     const entreeModal = document.getElementById('entree-modal');
     const sideOptions = document.getElementById('side-options');
@@ -1744,7 +1772,7 @@ function openEntreeSuggestionModal(itemId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            currentdrinks = data.drinks;
+            currentDrinks = data.drinks; // Fix variable name
             console.log('Received drinks data:', data.drinks);
             
             const drinkOptionsContainer = document.getElementById('drink-entree-options');
@@ -1768,7 +1796,7 @@ function openEntreeSuggestionModal(itemId) {
                 radio.value = drink.id;
                 
                 radio.addEventListener('change', function() {
-                    selecteddrink = drink;
+                    selectedDrink = drink; // Fix variable name
                 });
                 
                 const label = document.createElement('label');
@@ -1786,27 +1814,27 @@ function openEntreeSuggestionModal(itemId) {
             });
             
             // Add "No drink" option
-            const nodrinkOption = document.createElement('div');
-            nodrinkOption.className = 'drink-option';
+            const noDrinkOption = document.createElement('div');
+            noDrinkOption.className = 'drink-option';
             
-            const nodrinkRadio = document.createElement('input');
-            nodrinkRadio.type = 'radio';
-            nodrinkRadio.name = 'drink-choice';
-            nodrinkRadio.id = 'drink-none';
-            nodrinkRadio.value = 'none';
-            nodrinkRadio.checked = true; // Default selection
+            const noDrinkRadio = document.createElement('input');
+            noDrinkRadio.type = 'radio';
+            noDrinkRadio.name = 'drink-choice';
+            noDrinkRadio.id = 'drink-none';
+            noDrinkRadio.value = 'none';
+            noDrinkRadio.checked = true; // Default selection
             
-            nodrinkRadio.addEventListener('change', function() {
-                selecteddrink = null;
+            noDrinkRadio.addEventListener('change', function() {
+                selectedDrink = null; // Fix variable name
             });
             
-            const nodrinkLabel = document.createElement('label');
-            nodrinkLabel.htmlFor = 'drink-none';
-            nodrinkLabel.textContent = 'No drink, thanks';
+            const noDrinkLabel = document.createElement('label');
+            noDrinkLabel.htmlFor = 'drink-none';
+            noDrinkLabel.textContent = 'No drink, thanks';
             
-            nodrinkOption.appendChild(nodrinkRadio);
-            nodrinkOption.appendChild(nodrinkLabel);
-            drinkOptionsContainer.appendChild(nodrinkOption);
+            noDrinkOption.appendChild(noDrinkRadio);
+            noDrinkOption.appendChild(noDrinkLabel);
+            drinkOptionsContainer.appendChild(noDrinkOption);
             
             // Show the modal
             entreeModal.style.display = 'block';
@@ -1817,7 +1845,7 @@ function openEntreeSuggestionModal(itemId) {
         }
     })
     .catch(error => {
-        console.error('Error fetching sides:', error);
+        console.error('Error fetching drinks:', error);
         showNotification('Error fetching suggestions', 'error');
     });
 }
@@ -1840,41 +1868,34 @@ function handleItemSuggestion(suggestion, suggestionType) {
 // Function to add selected side and drink to cart
 function addSelectedSideAndDrinkToCart() {
     const entreeModal = document.getElementById('entree-modal');
-    const addPromises = [];
+    const itemsToAdd = [];
     
     if (selectedSide) {
-        addPromises.push(
-            fetch('/api/add_to_cart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ item_id: selectedSide.id }),
-            })
-        );
+        itemsToAdd.push({ id: selectedSide.id });
     }
     
     if (selectedDrink) {
-        addPromises.push(
+        itemsToAdd.push({ id: selectedDrink.id });
+    }
+    
+    if (itemsToAdd.length > 0) {
+        // Use the multiple_items endpoint if we have both items
+        if (itemsToAdd.length > 1) {
             fetch('/api/add_to_cart', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ item_id: selectedDrink.id }),
+                body: JSON.stringify({
+                    multiple_items: true,
+                    items: itemsToAdd
+                }),
             })
-        );
-    }
-    
-    if (addPromises.length > 0) {
-        Promise.all(addPromises)
-            .then(responses => Promise.all(responses.map(res => res.json())))
-            .then(results => {
-                // Use the last result for cart update
-                const lastResult = results[results.length - 1];
-                if (lastResult.success) {
-                    cartItems = lastResult.cart;
-                    cartTotal = lastResult.total;
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    cartItems = data.cart;
+                    cartTotal = data.total;
                     
                     saveCartToLocalStorage();
                     updateCartCountBadge();
@@ -1882,7 +1903,38 @@ function addSelectedSideAndDrinkToCart() {
                     let message = '';
                     if (selectedSide && selectedDrink) {
                         message = `Added ${selectedSide.name} and ${selectedDrink.name} to your order!`;
-                    } else if (selectedSide) {
+                    }
+                    
+                    if (message) {
+                        showNotification(message);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error adding multiple items to cart:', error);
+                showNotification('Error adding items to cart', 'error');
+            });
+        } else {
+            // Use the single item endpoint if we only have one item
+            const singleItem = itemsToAdd[0];
+            fetch('/api/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ item_id: singleItem.id }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    cartItems = data.cart;
+                    cartTotal = data.total;
+                    
+                    saveCartToLocalStorage();
+                    updateCartCountBadge();
+                    
+                    let message = '';
+                    if (selectedSide) {
                         message = `Added ${selectedSide.name} to your order!`;
                     } else if (selectedDrink) {
                         message = `Added ${selectedDrink.name} to your order!`;
@@ -1894,9 +1946,10 @@ function addSelectedSideAndDrinkToCart() {
                 }
             })
             .catch(error => {
-                console.error('Error adding items to cart:', error);
-                showNotification('Error adding items to cart', 'error');
+                console.error('Error adding item to cart:', error);
+                showNotification('Error adding item to cart', 'error');
             });
+        }
     }
     
     entreeModal.style.display = 'none';
