@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Food Kiosk - Survey Break</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .break-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .break-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .break-message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #666;
+            line-height: 1.5;
+            text-align: left;
+        }
+        
+        .order-info {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .survey-link {
+            display: inline-block;
+            background-color: #4285f4;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .survey-link:hover {
+            background-color: #3367d6;
+        }
+        
+        .continue-button {
+            background-color: #ff5c00;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .continue-button:hover {
+            background-color: #e65100;
+        }
+        
+        .progress {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="break-container">
+        <h1 class="break-title">Survey Break</h1>
+        
+        <div class="order-info">
+            <p><strong>Last Order:</strong> {{ order_description }}</p>
+        </div>
+        
+        <div class="break-message">
+            <p>Before continuing to the next set of tests, please take a moment to complete a short survey about your experience with the last orders.</p>
+        </div>
+           
+        <p>After completing the survey, click the button below to continue testing.</p>
+        
+        <a href="{{ url_for('start_test') }}" class="continue-button">Continue Testing</a>
+        
+        <div class="progress">
+            Completed {{ tests_completed }} of {{ total_tests }} tests
+        </div>
+    </div>
+</body>
+</html>

@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from menu import Menu, MenuItem
 from shopping_cart import ShoppingCart
-from new_agent import client, load_current_order, save_order, initialize_new_order, process_order_request
+from new_agent import client, load_current_order, save_order, initialize_new_order, process_order_request, reset_conversation_history
 
 app = Flask(__name__)
 app.secret_key = 'fastfoodkiosk_secretkey'
@@ -163,21 +163,28 @@ def test_login():
         session['user_id'] = user_id
         
         # Create randomized test sequence
-
-        # Can set up this sequence however we want to optimize testing
-        # For now, just doing a random order twice with AI and manually
+        order_ids = [1,2,3,4,5]
+        random.shuffle(order_ids)
         test_sequence = []
-        for order in TEST_ORDERS:
-            # Each order needs to be done twice - once with AI, once manually
-            test_sequence.append({"order_id": order["id"], "method": "ai"})
-            test_sequence.append({"order_id": order["id"], "method": "manual"})
+        order_sequence = []
+
+        for order_id in order_ids:
+            for order in TEST_ORDERS:
+                if order["id"] == order_id:
+                    order_sequence = []
+                    order_sequence.append({"order_id": order["id"], "method": "AI Chat"})
+                    order_sequence.append({"order_id": order["id"], "method": "AI Voice"})
+                    order_sequence.append({"order_id": order["id"], "method": "Manual"})
+
+                    random.shuffle(order_sequence)
+                    test_sequence.extend(order_sequence)
         
-        # Shuffle the sequence
-        random.shuffle(test_sequence)
+        print(test_sequence)
         
         # Store in session
         session['test_sequence'] = test_sequence
         session['current_test_index'] = 0
+        session['tests_completed'] = 0  # Initialize the counter
         
         # Redirect to first test
         return redirect(url_for('start_test'))
@@ -197,6 +204,7 @@ def start_test():
     current_test = session['test_sequence'][session['current_test_index']]
     order_id = current_test['order_id']
     method = current_test['method']
+    session['method'] = method
     
     # Get order details
     order_details = next((order for order in TEST_ORDERS if order['id'] == order_id), None)
@@ -206,13 +214,22 @@ def start_test():
     
     # Initialize a new empty order
     initialize_new_order()
+    # Reset conversation history for AI
+    reset_conversation_history()
+    print('order initialized')
     
     # Store test start time
     session['test_start_time'] = time.time()
     
     # Redirect to appropriate test page
-    if method == 'ai':
-        return render_template('test_ai.html', 
+    if method == 'AI Chat':
+        return render_template('test_ai_chat.html', 
+                              order_description=order_details['description'],
+                              order_id=order_id,
+                              test_index=session['current_test_index'] + 1,
+                              total_tests=len(session['test_sequence']))
+    elif method == 'AI Voice':
+        return render_template('test_ai_voice.html', 
                               order_description=order_details['description'],
                               order_id=order_id,
                               test_index=session['current_test_index'] + 1,
@@ -224,10 +241,16 @@ def start_test():
                               test_index=session['current_test_index'] + 1,
                               total_tests=len(session['test_sequence']))
 
-@app.route('/menu')
-def menu_page():
+@app.route('/test_start')
+def test_start():
     if 'user_id' not in session:
         return redirect(url_for('test_login'))
+    
+    session['test_start_time'] = time.time()
+    return redirect(url_for('menu_page'))
+
+@app.route('/menu')
+def menu_page():
     
     if 'start_time' not in session:
         session['start_time'] = time.time()
@@ -240,6 +263,7 @@ def menu_page():
     # Ensure we have a valid order file
     if not os.path.exists('order.json'):
         initialize_new_order()
+        print('order initialized')
         
     excluded_categories = ['ingredients', 'toppings', 'condiments']
     
@@ -333,19 +357,19 @@ def menu_page():
     return render_template('menu.html', 
                           categories=categories, 
                           menu_items=display_items,
-                          order_description=order_details['description'])
+                          order_description=order_details['description'],
+                          method=session['method'])
 
 @app.route('/checkout')
 def checkout_page():
     if 'user_id' not in session:
         return redirect(url_for('test_login'))
     
-    elapsed_time = 0
     if 'test_start_time' in session:
-        elapsed_time = time.time() - session.get('test_start_time', time.time())
+        session['elapsed_time'] = time.time() - session.get('test_start_time', time.time())
         
-    minutes = int(elapsed_time // 60)
-    seconds = int(elapsed_time % 60)
+    minutes = int(session['elapsed_time'] // 60)
+    seconds = int(session['elapsed_time'] % 60)
     time_display = f"{minutes}m {seconds}s"
     
     # Load current order from order.json
@@ -376,7 +400,7 @@ def complete_test():
         return jsonify({"success": False, "message": "Not logged in"}), 401
     
     # Calculate test duration
-    test_duration = time.time() - session.get('test_start_time', time.time())
+    test_duration = session['elapsed_time']
     
     # Get current test info
     current_test = session['test_sequence'][session['current_test_index']]
@@ -394,7 +418,7 @@ def complete_test():
         f.write(f"=== TEST COMPLETED: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===\n")
         f.write(f"User ID: {session['user_id']}\n")
         f.write(f"Order Prompt: {order_details['description']}\n")
-        f.write(f"Method: {'AI Chatbot' if method == 'ai' else 'Manual'}\n")
+        f.write(f"Method: {method}\n")
         f.write(f"Order Time: {round(test_duration, 2)} seconds\n")
         f.write("Final Cart:\n")
         
@@ -408,10 +432,20 @@ def complete_test():
         
         f.write("\n\n")
     
+    # Increment the tests completed counter
+    if 'tests_completed' not in session:
+        session['tests_completed'] = 1
+    else:
+        session['tests_completed'] += 1
+    
     # Move to next test
     session['current_test_index'] += 1
     
-    return jsonify({"success": True, "redirect": url_for('start_test')})
+    # Check if we need a survey break (every 3 tests)
+    if session['tests_completed'] % 3 == 0:
+        return jsonify({"success": True, "redirect": url_for('survey_break')})
+    else:
+        return jsonify({"success": True, "redirect": url_for('start_test')})
 
 @app.route('/api/add_to_cart', methods=['POST'])
 def add_to_cart():
@@ -911,6 +945,31 @@ def get_sides():
         'success': True,
         'sides': sorted(sides, key=lambda x: x['name'])
     })
+
+@app.route('/survey_break')
+def survey_break():
+    if 'user_id' not in session:
+        return redirect(url_for('test_login'))
+    
+    # Get the last completed test info
+    last_test_index = session['current_test_index'] - 1
+    if last_test_index >= 0 and last_test_index < len(session['test_sequence']):
+        last_test = session['test_sequence'][last_test_index]
+        order_id = last_test['order_id']
+        method = last_test['method']
+        
+        # Get order details
+        order_details = next((order for order in TEST_ORDERS if order['id'] == order_id), None)
+        
+        return render_template('survey_break.html', 
+                              order_id=order_id,
+                              order_description=order_details['description'],
+                              method=method,
+                              tests_completed=session.get('tests_completed', 0),
+                              total_tests=len(session['test_sequence']))
+    
+    # If we can't get the last test info, just continue
+    return redirect(url_for('start_test'))
 
 if __name__ == '__main__':
     app.run(debug=True)

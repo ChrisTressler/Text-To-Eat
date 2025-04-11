@@ -1,22 +1,22 @@
 [
     {
         "id": 1,
-        "description": "Order a Double Quarter Pounder with Cheese, add bacon, extra cheese, no onions. Large fries, 6 pc spicy mcnugget with sweet n sour + habanero ranch sauce. Side salad with no cucumbers, and a mocha frappe."
+        "description": "Classic Combo: 1. Big Mac, add ketchup. 2. Side of large fries and a large diet coke."
     },
     {
         "id": 2,
-        "description": "Order a 10-piece Chicken McNuggets with BBQ sauce, small fries, and a small Sprite"
+        "description": "Family Order: 1. Quarter Pounder with Cheese. Add bacon and extra cheese, remove onions. 2. Large Fries. 3. 6 pc mcnugget with ranch sauce. 4. Grilled Chicken Salad with no cucumbers. 5. Small latte and a hot caramel sundae."
     },
     {
         "id": 3,
-        "description": "Order a Quarter Pounder with Cheese, no pickles, large fries, and a large Diet Coke"
+        "description": "Group Meal: 1. 20 pc Spicy Chicken McNuggets with BBQ sauce. 2. Big Mac with no onions, added mayo, and a large apple slices. 3. Big Mac with no lettuce, extra cheese. 4. Large sweet tea, medium iced coffee, and an oreo mcflurry."
     },
     {
         "id": 4,
-        "description": "Order a McChicken sandwich, apple pie, and a medium sweet tea"
+        "description": "Fish Meal: 1. Filet-O-Fish, add lettuce and tomatoes. 2. Side of mozarrella sticks (5 pc), and a medium unsweet tea. 3. 6 pc Chicken McNuggets Happy meal."
     },
     {
         "id": 5,
-        "description": "Order a Filet-O-Fish, medium fries, and a chocolate milk"
+        "description": "Breakfast Family Meal: 1. Egg McMuffin, remove cheese and add onions, sausage, and an additional egg. 2. Hotcakes, add bacon. 3. Sausage McGriddle, add tomatoes, cucumbers, and extra cheese. 4. 3 Large orange juices."
     }
 ] 

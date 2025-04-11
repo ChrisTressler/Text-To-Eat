@@ -271,7 +271,7 @@
       "description": "Golden crispy onion rings."
     },
     {
-      "name": "Bacon Ranch Grilled Chicken Salad",
+      "name": "Grilled Chicken Salad",
       "id": "SALAD001",
       "price": 6.99,
       "ingredients": ["TOPPING001", "TOPPING004", "TOPPING008", "TOPPING009", "TOPPING010", "PATTY009"],
@@ -281,7 +281,7 @@
       "description": "Grilled chicken, bacon, cheese, and vegetables on a bed of mixed greens."
     },
     {
-      "name": "Bacon Ranch Crispy Chicken Salad",
+      "name": "Crispy Chicken Salad",
       "id": "SALAD002",
       "price": 6.99,
       "ingredients": ["TOPPING001", "TOPPING004", "TOPPING008", "TOPPING009", "TOPPING010", "PATTY010"],
@@ -352,7 +352,7 @@
       "description": "Savory sausage patty and freshly cracked egg on a buttermilk biscuit."
     },
     {
-      "name": "Bacon, Egg & Cheese McGriddles",
+      "name": "Bacon, Egg & Cheese McGriddle",
       "id": "BREAK007",
       "price": 4.99,
       "ingredients": ["TOPPING004", "TOPPING010", "TOPPING011"],
@@ -362,7 +362,7 @@
       "description": "Crispy bacon, freshly cracked egg, and American cheese on warm griddle cakes with maple flavor."
     },
     {
-      "name": "Sausage McGriddles",
+      "name": "Sausage McGriddle",
       "id": "BREAK008",
       "price": 3.49,
       "ingredients": ["TOPPING013"],
@@ -372,7 +372,7 @@
       "description": "Savory sausage patty on warm griddle cakes with maple flavor."
     },
     {
-      "name": "Sausage, Egg & Cheese McGriddles",
+      "name": "Sausage, Egg & Cheese McGriddle",
       "id": "BREAK009",
       "price": 4.99,
       "ingredients": ["TOPPING004", "TOPPING011", "TOPPING013"],
@@ -1300,6 +1300,16 @@
       "size": "packet",
       "category": "condiments",
       "description": "Spicy habanero ranch sauce."
+    },
+    {
+      "name": "Spicy Pepper Sauce",
+      "id": "SAUCE013",
+      "price": 0.00,
+      "ingredients": [],
+      "combo": false,
+      "size": "packet",
+      "category": "condiments",
+      "description": "Zesty and creamy sauce with a bold kick of black pepper and chili."
     },
     {
       "name": "Marinara Sauce",

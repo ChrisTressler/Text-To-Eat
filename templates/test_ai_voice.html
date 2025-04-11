@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fast Food Kiosk - Manual Test</title>
+    <title>Fast Food Kiosk - AI Test</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <style>
         .test-container {
@@ -39,7 +39,7 @@
             font-size: 16px;
             margin-bottom: 30px;
             padding: 10px;
-            background-color: #ffebee;
+            background-color: #e8f5e9;
             border-radius: 5px;
         }
         
@@ -67,11 +67,11 @@
         </div>
         
         <div class="method-description">
-            <p><strong>Manual Ordering Method:</strong> For this test, you will use the menu interface to place your order. 
-            Browse through the menu categories, select items, and add them to your cart manually.</p>
+            <p><strong>AI Voice Ordering Method:</strong> For this test, you will use the AI with voice recognition to place your order. 
+            Simply speak your order into the microphone and interact with the AI to complete your order.</p>
         </div>
         
-        <a href="{{ url_for('test_start') }}" class="start-button">Start Manual Test</a>
+        <a href="{{ url_for('test_start') }}" class="start-button">Start AI Test</a>
     </div>
 </body>
 </html> 

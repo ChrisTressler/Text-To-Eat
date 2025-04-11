@@ -29,7 +29,61 @@ function showTypingIndicator() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+function setupAutoResizingTextarea() {
+    const textarea = document.getElementById('llm-input');
+    if (!textarea) return;
+    
+    // Set initial height
+    textarea.style.height = 'auto';
+    textarea.style.height = (textarea.scrollHeight) + 'px';
+    
+    // Set minimum and maximum heights
+    textarea.style.minHeight = '50px';
+    textarea.style.maxHeight = '200px';
+    
+    // Function to resize the textarea
+    const resizeTextarea = () => {
+        // Store the scroll position
+        const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Temporarily shrink the textarea to get the right scrollHeight
+        textarea.style.height = 'auto';
+        
+        // Calculate new height (with a small buffer to prevent text from touching the mic icon)
+        const newHeight = Math.min(200, textarea.scrollHeight);
+        textarea.style.height = newHeight + 'px';
+        
+        // Restore the scroll position to prevent page jumping
+        window.scrollTo(0, scrollPos);
+        
+        // If we have a mic button, ensure it's properly positioned
+        const micButton = document.getElementById('mic-button');
+        if (micButton) {
+            // Position the mic button vertically centered
+            const textareaRect = textarea.getBoundingClientRect();
+            const micButtonRect = micButton.getBoundingClientRect();
+            const topOffset = (textareaRect.height - micButtonRect.height) / 2;
+            micButton.style.top = `${topOffset}px`;
+        }
+    };
+    
+    // Add event listeners for input and focus
+    textarea.addEventListener('input', resizeTextarea);
+    textarea.addEventListener('focus', resizeTextarea);
+    
+    // Also resize when window is resized
+    window.addEventListener('resize', resizeTextarea);
+    
+    // Initial resize
+    resizeTextarea();
+}
+
 function setupSpeechToText() {
+    // Check if we've already set up the mic button to avoid duplicates
+    if (document.getElementById('mic-button')) {
+        return;
+    }
+    
     const micButton = document.createElement('button');
     micButton.id = 'mic-button';
     micButton.className = 'mic-button';
@@ -40,15 +94,31 @@ function setupSpeechToText() {
     if (chatInputContainer) {
         const inputWrapper = document.createElement('div');
         inputWrapper.className = 'input-mic-wrapper';
+        inputWrapper.style.position = 'relative'; // Ensure relative positioning
       
         const textarea = document.getElementById('llm-input');
       
         if (textarea) {
             chatInputContainer.removeChild(textarea);
+            
+            // Add some right padding to the textarea to make room for the mic button
+            textarea.style.paddingRight = '40px';
+            
             inputWrapper.appendChild(textarea);
             inputWrapper.appendChild(micButton);
+            
+            // Position the mic button absolutely within the wrapper
+            micButton.style.position = 'absolute';
+            micButton.style.right = '10px';
+            micButton.style.top = '50%';
+            micButton.style.transform = 'translateY(-50%)';
         
             chatInputContainer.insertBefore(inputWrapper, chatInputContainer.firstChild);
+            
+            // Initial resize of the textarea
+            if (typeof setupAutoResizingTextarea === 'function') {
+                setupAutoResizingTextarea();
+            }
         }
     }
     
@@ -111,6 +181,22 @@ function setupSpeechToText() {
             }
             
             textarea.value = finalTranscript + interimTranscript;
+            
+            // Manually trigger resize after updating the text value
+            // This is the key addition to make the textarea resize during speech
+            if (textarea.style.height) {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(200, textarea.scrollHeight) + 'px';
+                
+                // Also update mic button position if needed
+                const micButton = document.getElementById('mic-button');
+                if (micButton) {
+                    const textareaRect = textarea.getBoundingClientRect();
+                    const micButtonRect = micButton.getBoundingClientRect();
+                    const topOffset = (textareaRect.height - micButtonRect.height) / 2;
+                    micButton.style.top = `${topOffset}px`;
+                }
+            }
             
             silenceTimer = setTimeout(() => {
                 if (isListening) {
@@ -322,35 +408,15 @@ async function sendMessage(message) {
     }
 }
 
-function setupAutoResizingTextarea() {
-    const textarea = document.getElementById('llm-input');
-    if (!textarea) return;
-    
-    // Set initial height
-    textarea.style.height = 'auto';
-    textarea.style.height = (textarea.scrollHeight) + 'px';
-    
-    // Set minimum and maximum heights
-    textarea.style.minHeight = '50px';
-    textarea.style.maxHeight = '200px';
-    
-    // Function to resize the textarea
-    const resizeTextarea = () => {
-        textarea.style.height = 'auto';
-        textarea.style.height = (textarea.scrollHeight) + 'px';
-    };
-    
-    // Add event listeners for input and focus
-    textarea.addEventListener('input', resizeTextarea);
-    textarea.addEventListener('focus', resizeTextarea);
-    
-    // Also resize when window is resized
-    window.addEventListener('resize', resizeTextarea);
-}
-
 function setupChatInterface() {
     if (llmSubmit && llmInput) {
-        llmSubmit.addEventListener('click', function() {
+        // Remove any existing event listeners by cloning and replacing the element
+        const oldSubmitBtn = llmSubmit;
+        const newSubmitBtn = oldSubmitBtn.cloneNode(true);
+        oldSubmitBtn.parentNode.replaceChild(newSubmitBtn, oldSubmitBtn);
+        
+        // Add the event listener to the new button
+        newSubmitBtn.addEventListener('click', function() {
             const message = llmInput.value.trim();
             if (message) {
                 sendMessage(message);
@@ -359,22 +425,58 @@ function setupChatInterface() {
                 llmInput.style.height = '50px';
             }
         });
+        
+        // Update the global reference
+        window.llmSubmit = newSubmitBtn;
+        // Also update the local reference for this function to work
+        llmSubmit = newSubmitBtn;
     }
     
     if (llmInput) {
-        llmInput.addEventListener('keypress', function(e) {
+        // Remove any existing event listeners by cloning and replacing the element
+        const oldInput = llmInput;
+        const newInput = oldInput.cloneNode(true);
+        oldInput.parentNode.replaceChild(newInput, oldInput);
+        
+        // Add the event listener to the new input
+        newInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
+                // Use the local reference instead of getElementById
                 llmSubmit.click();
             }
         });
+        
+        // Update the global reference
+        window.llmInput = newInput;
+        // Also update the local reference for this function to work
+        llmInput = newInput;
     }
     
     // Initialize auto-resizing
     setupAutoResizingTextarea();
 }
 
+// Track if we've already initialized the chat
+let chatInitialized = false;
+
 function initializeChat() {
+    // Only initialize once
+    if (chatInitialized) {
+        console.log('Chat already initialized, skipping duplicate initialization');
+        return;
+    }
+    
+    // Refresh our references to the DOM elements
+    const chatMessagesElement = document.getElementById('chat-messages');
+    const llmInputElement = document.getElementById('llm-input');
+    const llmSubmitElement = document.getElementById('llm-submit');
+    
+    // Update our global references
+    if (chatMessagesElement) chatMessages = chatMessagesElement;
+    if (llmInputElement) llmInput = llmInputElement;
+    if (llmSubmitElement) llmSubmit = llmSubmitElement;
+    
     setupChatInterface();
     
     setTimeout(() => {
@@ -382,18 +484,31 @@ function initializeChat() {
             addMessage("Welcome to McDonald's! How can I help you today? You can order items, customize them, or ask about our menu.");
         }
     }, 300);
+    
+    chatInitialized = true;
 }
 
-document.addEventListener('DOMContentLoaded', initializeChat);
-
-window.addEventListener('storage', function(e) {
-    if (e.key === 'cartItems' || e.key === 'cartTotal') {
-        if (typeof window.updateGlobalCartState === 'function') {
-            window.updateGlobalCartState();
-        }
+// Use a self-executing function to ensure we only set up event listeners once
+(function() {
+    // Check if we've already set up the event listeners
+    if (window.chatEventListenersInitialized) {
+        return;
     }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(setupSpeechToText, 500);
-});
+    
+    document.addEventListener('DOMContentLoaded', initializeChat);
+    
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'cartItems' || e.key === 'cartTotal') {
+            if (typeof window.updateGlobalCartState === 'function') {
+                window.updateGlobalCartState();
+            }
+        }
+    });
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(setupSpeechToText, 500);
+    });
+    
+    // Mark that we've set up the event listeners
+    window.chatEventListenersInitialized = true;
+})();

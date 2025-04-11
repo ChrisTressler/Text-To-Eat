@@ -152,6 +152,8 @@ def process_order_request(user_message, menu_items, current_order=None):
         * For "burger" - Ask which burger they would like from our selection on the menu
         * For "McNuggets" - Ask if they want 4pc, 6pc, or 10pc
         * For items with multiple sizes, ask them to clarify. By default and if the user does not clarify, return medium.
+    - If the order is vague but it is clear what the user wants, add the item to the order without asking for clarification.
+    - If a customer has a typo or incorrect name, ignore the typo and add the correct item to the order without issue.
     - Be proactive in getting complete order details
     - If a customer orders an entree, ask if they would like a side and drink with it
     - Never mention item ids in your messages to users.
@@ -287,3 +289,8 @@ def process_order_request(user_message, menu_items, current_order=None):
             "updated_order": current_order,
             "error": str(e)
         }
+
+def reset_conversation_history():
+    """Reset the global conversation history."""
+    global conversation_history
+    conversation_history = []
