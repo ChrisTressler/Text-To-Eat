@@ -1165,3 +1165,211 @@ Final Cart:
 Total: $38.72
 
 
+=== TEST COMPLETED: 2025-04-20 22:00:44 ===
+User ID: 21-30
+Order Prompt: Classic Combo: 1. Big Mac, add ketchup. 2. Side of large fries and a large diet coke.
+Method: AI Chat
+Order Time: 79.77 seconds
+Final Cart:
+  • Big Mac (x1) - $5.99 - Notes: With ketchup
+  • French Fries (Large) (x1) - $3.49 - Notes: 
+  • Diet Coke (Large) (x1) - $2.49 - Notes: 
+Total: $11.97
+
+
+=== TEST COMPLETED: 2025-04-20 22:04:15 ===
+User ID: 21-30
+Order Prompt: Classic Combo: 1. Big Mac, add ketchup. 2. Side of large fries and a large diet coke.
+Method: AI Voice
+Order Time: 37.66 seconds
+Final Cart:
+  • Big Mac (x1) - $5.99 - Notes: Add ketchup
+  • French Fries (Large) (x1) - $3.49 - Notes: 
+  • Diet Coke (Large) (x1) - $2.49 - Notes: 
+Total: $11.97
+
+
+=== TEST COMPLETED: 2025-04-20 22:06:20 ===
+User ID: 21-30
+Order Prompt: Classic Combo: 1. Big Mac, add ketchup. 2. Side of large fries and a large diet coke.
+Method: Manual
+Order Time: 24.38 seconds
+Final Cart:
+  • Big Mac (Customized) (x1) - $5.99 - Notes: Added: Ketchup
+  • French Fries (Large) (x1) - $3.49
+  • Diet Coke (Large) (x1) - $2.49
+Total: $11.97
+
+
+=== TEST COMPLETED: 2025-04-20 22:09:34 ===
+User ID: 21-30
+Order Prompt: Family Order: 1. Quarter Pounder with Cheese. Add bacon and extra cheese, remove onions. 2. Large Fries. 3. 6 pc mcnugget with ranch sauce. 4. Grilled Chicken Salad with no cucumbers. 5. Small latte and a hot caramel sundae.
+Method: AI Chat
+Order Time: 122.77 seconds
+Final Cart:
+  • Quarter Pounder with Cheese (x1) - $6.49 - Notes: Add bacon, extra cheese, no onions
+  • French Fries (Large) (x1) - $3.49 - Notes: 
+  • Chicken McNuggets (6 pc) (x1) - $4.49 - Notes: With Ranch Sauce
+  • Grilled Chicken Salad (x1) - $6.99 - Notes: No cucumbers
+  • Latte (Small) (x1) - $2.99 - Notes: 
+  • Hot Caramel Sundae (x1) - $2.99 - Notes: 
+Total: $27.44
+
+
+=== TEST COMPLETED: 2025-04-20 22:12:20 ===
+User ID: 21-30
+Order Prompt: Family Order: 1. Quarter Pounder with Cheese. Add bacon and extra cheese, remove onions. 2. Large Fries. 3. 6 pc mcnugget with ranch sauce. 4. Grilled Chicken Salad with no cucumbers. 5. Small latte and a hot caramel sundae.
+Method: AI Voice
+Order Time: 29.24 seconds
+Final Cart:
+  • Quarter Pounder with Cheese (x1) - $6.49 - Notes: Add bacon, extra cheese, no onions
+  • French Fries (Large) (x1) - $3.49 - Notes: 
+  • Chicken McNuggets (6 pc) (x1) - $4.49 - Notes: With Ranch Sauce
+  • Grilled Chicken Salad (x1) - $6.99 - Notes: No cucumbers
+  • Latte (Small) (x1) - $2.99 - Notes: 
+  • Hot Caramel Sundae (x1) - $2.99 - Notes: 
+Total: $27.44
+
+
+=== TEST COMPLETED: 2025-04-20 22:15:16 ===
+User ID: 21-30
+Order Prompt: Family Order: 1. Quarter Pounder with Cheese. Add bacon and extra cheese, remove onions. 2. Large Fries. 3. 6 pc mcnugget with ranch sauce. 4. Grilled Chicken Salad with no cucumbers. 5. Small latte and a hot caramel sundae.
+Method: Manual
+Order Time: 103.86 seconds
+Final Cart:
+  • Quarter Pounder with Cheese (Customized) (x1) - $7.99 - Notes: Removed: Onions; Added: Cheese, Bacon
+  • French Fries (Large) (x1) - $3.49
+  • Chicken McNuggets (6 pc) (x1) - $4.49
+  • Ranch Sauce (x1) - $0.00
+  • Grilled Chicken Salad (Customized) (x1) - $6.99 - Notes: Removed: Cucumbers
+  • Latte (Small) (x1) - $2.99
+  • Hot Caramel Sundae (x1) - $2.99
+Total: $28.94
+
+
+=== TEST COMPLETED: 2025-04-20 22:18:53 ===
+User ID: 21-30
+Order Prompt: Group Meal: 1. 20 pc Spicy Chicken McNuggets with BBQ sauce. 2. Big Mac with no onions, added mayo, and a large apple slices. 3. Big Mac with no lettuce, extra cheese. 4. Large sweet tea, medium iced coffee, and an oreo mcflurry.
+Method: AI Chat
+Order Time: 72.28 seconds
+Final Cart:
+  • Spicy Chicken McNuggets (10 pc) (x2) - $13.98 - Notes: with BBQ sauce
+  • Big Mac (x1) - $5.99 - Notes: no onions, mayo
+  • Apple Slices (Large) (x1) - $3.99 - Notes: 
+  • Big Mac (x1) - $5.99 - Notes: no lettuce, extra cheese
+  • Sweet Tea (Large) (x1) - $2.29 - Notes: 
+  • Iced Coffee (x1) - $2.49 - Notes: 
+  • McFlurry with OREO Cookies (x1) - $3.99 - Notes: 
+Total: $38.72
+
+
+=== TEST COMPLETED: 2025-04-20 22:21:03 ===
+User ID: 21-30
+Order Prompt: Group Meal: 1. 20 pc Spicy Chicken McNuggets with BBQ sauce. 2. Big Mac with no onions, added mayo, and a large apple slices. 3. Big Mac with no lettuce, extra cheese. 4. Large sweet tea, medium iced coffee, and an oreo mcflurry.
+Method: AI Voice
+Order Time: 41.17 seconds
+Final Cart:
+  • Spicy Chicken McNuggets (20 pc) (x1) - $9.99 - Notes: With BBQ Sauce
+  • Big Mac (x1) - $5.99 - Notes: No onions, added mayo
+  • Big Mac (x1) - $5.99 - Notes: No lettuce, extra cheese
+  • Apple Slices (Large) (x1) - $3.99 - Notes: 
+  • Sweet Tea (Large) (x1) - $2.29 - Notes: 
+  • Iced Coffee (x1) - $2.49 - Notes: 
+  • McFlurry with OREO Cookies (x1) - $3.99 - Notes: 
+Total: $34.73
+
+
+=== TEST COMPLETED: 2025-04-20 22:23:38 ===
+User ID: 21-30
+Order Prompt: Group Meal: 1. 20 pc Spicy Chicken McNuggets with BBQ sauce. 2. Big Mac with no onions, added mayo, and a large apple slices. 3. Big Mac with no lettuce, extra cheese. 4. Large sweet tea, medium iced coffee, and an oreo mcflurry.
+Method: Manual
+Order Time: 116.75 seconds
+Final Cart:
+  • Spicy Chicken McNuggets (10 pc) (Customized) (x2) - $13.98 - Notes: Size: 10 pc; Added: BBQ Sauce
+  • Big Mac (Customized) (x1) - $5.99 - Notes: Removed: Onions; Added: Mayonnaise
+  • Apple Slices (Large) (x1) - $3.99
+  • Big Mac (Customized) (x1) - $6.49 - Notes: Removed: Lettuce; Added: Cheese
+  • Sweet Tea (Large) (x1) - $2.29
+  • Iced Coffee (x1) - $2.49
+  • McFlurry with OREO Cookies (x1) - $3.99
+Total: $39.22
+
+
+=== TEST COMPLETED: 2025-04-20 22:26:17 ===
+User ID: 21-30
+Order Prompt: Fish Meal: 1. Filet-O-Fish, add lettuce and tomatoes. 2. Side of mozarrella sticks (5 pc), and a medium unsweet tea. 3. 6 pc Chicken McNuggets Happy meal.
+Method: AI Voice
+Order Time: 102.4 seconds
+Final Cart:
+  • Filet-O-Fish (x1) - $5.49 - Notes: Add lettuce and tomato
+  • Mozzarella Sticks (5 pc) (x1) - $4.49 - Notes: 
+  • Unsweetened Iced Tea (x1) - $1.99 - Notes: Medium
+  • 6-piece Chicken McNuggets Happy Meal (x1) - $5.99 - Notes: Select sauce, drink, and side
+Total: $17.96
+
+
+=== TEST COMPLETED: 2025-04-20 22:28:18 ===
+User ID: 21-30
+Order Prompt: Fish Meal: 1. Filet-O-Fish, add lettuce and tomatoes. 2. Side of mozarrella sticks (5 pc), and a medium unsweet tea. 3. 6 pc Chicken McNuggets Happy meal.
+Method: AI Chat
+Order Time: 39.21 seconds
+Final Cart:
+  • Filet-O-Fish (x1) - $5.49 - Notes: 
+  • Mozzarella Sticks (5 pc) (x1) - $4.49 - Notes: 
+  • Unsweetened Iced Tea (x1) - $1.99 - Notes: 
+  • 6-piece Chicken McNuggets Happy Meal (x1) - $5.99 - Notes: Please specify sauce choice.
+Total: $17.96
+
+
+=== TEST COMPLETED: 2025-04-20 22:30:37 ===
+User ID: 21-30
+Order Prompt: Fish Meal: 1. Filet-O-Fish, add lettuce and tomatoes. 2. Side of mozarrella sticks (5 pc), and a medium unsweet tea. 3. 6 pc Chicken McNuggets Happy meal.
+Method: Manual
+Order Time: 76.87 seconds
+Final Cart:
+  • Filet-O-Fish (Customized) (x1) - $5.49 - Notes: Added: Lettuce, Tomatoes
+  • Mozzarella Sticks (5 pc) (x1) - $4.49
+  • Unsweetened Iced Tea (x1) - $1.99
+  • 6-piece Chicken McNuggets Happy Meal (x1) - $5.99
+Total: $17.96
+
+
+=== TEST COMPLETED: 2025-04-20 22:33:43 ===
+User ID: 21-30
+Order Prompt: Breakfast Family Meal: 1. Egg McMuffin, remove cheese and add onions, sausage, and an additional egg. 2. Hotcakes, add bacon. 3. Sausage McGriddle, add tomatoes, cucumbers, and extra cheese. 4. 3 Large orange juices.
+Method: AI Chat
+Order Time: 127.45 seconds
+Final Cart:
+  • Egg McMuffin (x1) - $3.99 - Notes: No cheese, add onion, sausage, and extra egg
+  • Hotcakes (x1) - $3.99 - Notes: Add bacon
+  • Sausage McGriddle (x1) - $3.49 - Notes: Add tomatoes, cucumbers, and extra cheese
+  • Minute Maid Orange Juice (Large) (x3) - $8.97 - Notes: 
+Total: $20.44
+
+
+=== TEST COMPLETED: 2025-04-20 22:35:18 ===
+User ID: 21-30
+Order Prompt: Breakfast Family Meal: 1. Egg McMuffin, remove cheese and add onions, sausage, and an additional egg. 2. Hotcakes, add bacon. 3. Sausage McGriddle, add tomatoes, cucumbers, and extra cheese. 4. 3 Large orange juices.
+Method: AI Voice
+Order Time: 33.31 seconds
+Final Cart:
+  • Egg McMuffin (x1) - $3.99 - Notes: No cheese, add onion, sausage, and extra egg
+  • Hotcakes (x1) - $3.99 - Notes: Add bacon
+  • Sausage, Egg & Cheese McGriddle (x1) - $4.99 - Notes: Add tomatoes, cucumbers, and extra cheese
+  • Minute Maid Orange Juice (Large) (x3) - $8.97 - Notes: 
+Total: $21.94
+
+
+=== TEST COMPLETED: 2025-04-20 22:39:00 ===
+User ID: 21-30
+Order Prompt: Breakfast Family Meal: 1. Egg McMuffin, remove cheese and add onions, sausage, and an additional egg. 2. Hotcakes, add bacon. 3. Sausage McGriddle, add tomatoes, cucumbers, and extra cheese. 4. 3 Large orange juices.
+Method: Manual
+Order Time: 81.92 seconds
+Final Cart:
+  • Egg McMuffin (Customized) (x1) - $5.99 - Notes: Removed: Cheese; Added: Onions, Egg, Sausage Patty
+  • Hotcakes (Customized) (x1) - $4.99 - Notes: Added: Bacon
+  • Sausage McGriddle (Customized) (x1) - $3.99 - Notes: Added: Tomatoes, Cucumbers, Cheese
+  • Minute Maid Orange Juice (Large) (x3) - $8.97
+Total: $23.94
+
+
