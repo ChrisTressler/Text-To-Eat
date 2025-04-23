@@ -8,5 +8,7 @@ To clone the repository: git clone https://github.com/ChrisTressler/Text_To_Eat.
 
 ## Techonology
 We are using Python for this entire project using Flask for the frontend and calling upon the OpenAI API for the LLM interface.
-
-![image](https://github.com/user-attachments/assets/b0588872-3eb2-499d-87da-ab40ae7baa53)
+![image](https://github.com/user-attachments/assets/6a420b79-23de-4e4e-a32b-32af3052f9e7)
+Fig: Menu order screen
+![image](https://github.com/user-attachments/assets/2b36e55f-f1e7-41f2-9feb-7e79b3385d54)
+Fig: Checkout screen
