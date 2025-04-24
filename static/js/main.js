@@ -1526,7 +1526,7 @@ document.addEventListener('DOMContentLoaded', function() {
             messageDiv.className = 'message system';
             
             const messagePara = document.createElement('p');
-            messagePara.textContent = "Welcome to McDonald's! How can I help you today?";
+            messagePara.textContent = "Welcome to Text-To-Eat! How can I help you today?";
             
             messageDiv.appendChild(messagePara);
             chatMessages.appendChild(messageDiv);
