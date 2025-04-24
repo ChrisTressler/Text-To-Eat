@@ -481,7 +481,7 @@ function initializeChat() {
     
     setTimeout(() => {
         if (chatMessages && chatMessages.children.length === 0) {
-            addMessage("Welcome to McDonald's! How can I help you today? You can order items, customize them, or ask about our menu.");
+            addMessage("Welcome to Text-To-Eat! How can I help you today? You can order items, customize them, or ask about our menu.");
         }
     }, 300);
     
